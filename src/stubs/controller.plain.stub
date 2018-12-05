@@ -1,0 +1,214 @@
+<?php
+
+namespace ${ControllersNamespace};
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+use ${ContractNamespace}\RawableModelClassContract;
+use Illuminate\Support\Facades\Log;
+
+use ${ModelsNamespace}\RawableModelClass;
+
+use Validator;
+
+class RawableModelClassController extends Controller
+{
+
+    protected $repository;
+    protected $tag;
+
+    public function __construct(RawableModelClassContract $repository)
+    {
+        $this->repository = $repository;
+        $this->tag = "Controller:RawableModelClass";
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+
+            $validator = Validator::make(
+                $request->all(), 
+                ${storeValidations}
+            );
+
+            if (!$validator->fails()) {
+
+                $model = new RawableModelClass();
+
+                /**
+                * @todo Auth and Save Implementation
+                */ 
+
+                $response = $this->repository->createRawableModelClass($auth, $model);
+                
+                return response()->json($response);
+            
+            } else {
+
+                $response =(object)[];
+                $response->errors = $validator->errors();
+                return response()->json($response);
+
+            }
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        try {
+            
+            $response = $this->repository->readRawableModelClass($auth, $id);
+            return response()->json($response);
+
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+
+            $validator = Validator::make(
+                $request->all(), 
+                ${updateValidations}
+            );
+
+            if (!$validator->fails()) {
+
+                $model = new RawableModelClass();
+
+                /**
+                * @todo Auth and Update Implementation
+                */ 
+
+                $response = $this->repository->updateRawableModelClass($auth, $model);
+                
+                return response()->json($response);
+            
+            } else {
+
+                $response =(object)[];
+                $response->errors = $validator->errors();
+                return response()->json($response);
+
+            }
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        try {
+
+            $model = RawableModelClass::findOrFail($id);
+
+            $response = $this->repository->deleteRawableModelClass($auth, $model);
+            
+            return response()->json($response);
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    public function getAllRawableModelClass()
+    {
+        try {
+
+            $response = $this->projects->getAllRawableModelClass();
+            return response()->json($response);
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    public function getPaginatedRawableModelClass($limit, $offset, $search = null)
+    {
+        try {
+
+            $response = $this->projects->getPaginatedRawableModelClass($auth, $limit, $offset, $search);
+            return response()->json($response);
+
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    public function getCountRawableModelClass($search = null)
+    {
+        try {
+
+            $response = $this->projects->getCountRawableModelClass($auth, $limit, $offset, $search);
+            return response()->json($response);
+
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+    
+    ${belongsToRelationships}${hasManyRelationships}
+}

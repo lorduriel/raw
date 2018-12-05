@@ -1,0 +1,6 @@
+//Get all ${lcFirstRawableModelClass} by ${ByModel}
+		Route::get('${lcFirstByModel}/{id}/all/', '${Controller}@getAll${ManyModels}By${ByModel}');
+
+		//Get paginated ${lcFirstRawableModelClass} by ${ByModel}
+		Route::get('${lcFirstByModel}/{id}/paginated/{limit}/{offset}/{search?}', '${Controller}@getPaginated${ManyModels}By${ByModel}');
+		Route::get('${lcFirstByModel}/{id}/count/{search?}', '${Controller}@getCount${ManyModels}By${ByModel}');

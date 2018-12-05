@@ -1,0 +1,86 @@
+public function getAll${ManyModels}By${ByModel}($auth, $id){
+
+		try {
+				
+			$model = ${ByModel}::findOrFail($id);
+
+			$relationShipCollenction = $model->${lcFirstManyModelsPlural}()->get();
+
+			return $relationShipCollenction;
+
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex' => $e->getMessage()]);
+		}
+
+	}
+
+	public function getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search){
+
+		try {
+
+			$model = ${ByModel}::findOrFail($id);
+
+				if(isset($search)){
+
+					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
+														/**
+														* @todo Search Implementation 
+														* 
+														*/
+														->skip($limit*$page)
+								                		->take($limit)
+								                		->get();
+
+					return $relationShipCollenction;
+							
+				} else {
+
+					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
+														->skip($limit*$page)
+								                		->take($limit)
+								                		->get();
+								
+		            return $relationShipCollenction;
+				}
+
+
+		} catch (Exception $e) {
+
+			Log::error($this->tag, ['ex'=>$e->getMessage()]);	
+		}
+
+	}
+
+
+	public function getCount${ManyModels}By${ByModel}($auth, $id, $search){
+
+		try {
+
+			$model = ${ByModel}::findOrFail($id);
+
+				if(isset($search)){
+
+					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
+														/**
+														* @todo Search Implementation 
+														* 
+														*/
+								                		->count();
+
+					return $relationShipCollenction;
+							
+				} else {
+
+					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
+								                		->count();
+								
+		            return $relationShipCollenction;
+				}
+
+
+		} catch (Exception $e) {
+
+			Log::error($this->tag, ['ex'=>$e->getMessage()]);	
+		}
+
+	}

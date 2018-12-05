@@ -1,0 +1,62 @@
+    /**
+     * Get all ${ManyModels} by a ${ByModel}
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getAll${ManyModels}By${ByModel}($id)
+    {
+        try {
+
+            $response = $this->repository->getAll${ManyModels}By${ByModel}($auth, $id);
+
+            return response()->json($response);
+
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Get paginated ${ManyModels} by a ${ByModel}
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getPaginated${ManyModels}By${ByModel}($id, $limit, $page, $search = null)
+    {
+        try {
+
+            $response = $this->repository->getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search);
+
+            return response()->json($response);
+
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }
+
+     /**
+     * Get count ${ManyModels} by a ${ByModel}
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getCount${ManyModels}By${ByModel}($id, $search = null)
+    {
+        try {
+
+            $response = $this->repository->getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search);
+
+            return response()->json($response);
+
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }

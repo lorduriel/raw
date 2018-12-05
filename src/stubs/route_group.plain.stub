@@ -1,0 +1,16 @@
+	// custom '${lcFirstRawableModelClass}' routes
+	Route::group(['prefix' => '${lcFirstRawableModelClass}'], function (){
+
+		//Get all ${lcFirstRawableModelClass}
+		Route::get('all/', '${Controller}r@getAll${RawableModelClassPlural}');
+
+		//Get paginated ${lcFirstRawableModelClass}
+		Route::get('paginated/{limit}/{offset}/{search?}', '${Controller}@getPaginated${RawableModelClassPlural}');
+		Route::get('count/{search?}', '${Controller}@getCount${RawableModelClassPlural}');
+
+		${hasManyRelationships}${belongsToRelationships}
+	});
+
+	// resource '${lcFirstRawableModelClass}' routes
+	Route::resource('/${lcFirstRawableModelClass}', '${Controller}');
+

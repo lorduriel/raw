@@ -1,0 +1,127 @@
+<?php
+
+namespace ${RepositoryNamespace};
+
+use ${ContractNamespace}\RawableModelClassContract;
+use Illuminate\Support\Facades\Log;
+
+use Exception;
+use App\Models\RawableModelClass;
+${belongsToModels}
+use Auth;
+
+class RawableModelClassRepository implements RawableModelClassContract
+{
+	protected $model;
+	protected $tag;
+
+	function __construct(RawableModelClass $model)
+	{
+		$this->model = $model;
+		$this->tag = 'Repository:RawableModelClass';
+	}
+
+	public function getAllRawableModelClasss($auth){
+		try {
+			$models = $this->model->all();
+			return $models;
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex' => $e->getMessage()]);
+		}
+	}
+
+	public function getPaginatedRawableModelClasss($auth, $limit, $offset, $search){
+		try {
+
+			if(isset($search)){
+
+				return $this->model
+					/**
+					* @todo Search Implementation 
+					* 
+					*/
+					->skip($limit*$offset)
+					->take($limit)
+					->get();
+			} else {
+				return $this->model
+					->skip($limit*$offset)
+					->take($limit)
+					->get();
+			}
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+
+
+	public function getCountRawableModelClasss($auth, $search){
+		try {
+
+			if(isset($search)){
+
+				return $this->model
+					/**
+					* @todo Search Implementation 
+					* 
+					*/
+					->count();
+
+			} else {
+
+				return $this->model
+					->count();
+
+			}
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+
+	public function readRawableModelClass($auth, $id){
+		try {
+
+			$model = $this->model->findOrFail($id);
+			return $model;
+
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+
+
+	public function createRawableModelClass($auth, $model){
+		try {
+
+			$model->save();
+			return $model;
+
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+
+	public function updateRawableModelClass($auth, $model){
+		try {
+
+			$model->save();
+			return $model;
+
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+
+	public function deleteRawableModelClass($auth, $model){
+		try {
+
+			$model->delete();
+			return $model;
+			
+		} catch (Exception $e) {
+			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+		}
+	}
+	
+	${belongsToRelationships}${hasManyRelationships}
+}

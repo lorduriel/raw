@@ -1,0 +1,5 @@
+public function getAll${ManyModels}By${ByModel}($auth, $id);
+
+	public function getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search);
+
+	public function getCount${ManyModels}By${ByModel}($auth, $id, $search);
