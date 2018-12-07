@@ -233,7 +233,6 @@ class Raw
         $output =  $contractTemplate->getTemplate();
         
         if(file_exists($productionFileName)){
-            echo "No existe".$productionFileName.PHP_EOL;
             if($this->options['force']=="true"){
                 $productionFileHandler = fopen($productionFileName, 'w');
                 fwrite($productionFileHandler, $output);
@@ -242,7 +241,6 @@ class Raw
                 echo "This Contract already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
-            echo "existe".$productionFileName.PHP_EOL;
             $productionFileHandler = fopen($productionFileName, 'w');
             fwrite($productionFileHandler, $output);
             fclose($productionFileHandler);
