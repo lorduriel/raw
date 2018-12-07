@@ -23,11 +23,13 @@ class RawServiceProvider extends ServiceProvider
             RepositoryCommand::class
         ]);
 
-        if (file_exists(base_path(config('raw')['routes_default_path']))) {
-            $routeGroups = scandir(base_path(config('raw')['routes_default_path']));
-            foreach ($routeGroups as $routeGroup) {
-                if($routeGroup != '.' && $routeGroup != '..'){
-                    $this->loadRoutesFrom(base_path(config('raw')['routes_default_path'])."\\".$routeGroup);
+        if(config('raw') != null){
+            if (file_exists(base_path(config('raw')['routes_default_path']))) {
+                $routeGroups = scandir(base_path(config('raw')['routes_default_path']));
+                foreach ($routeGroups as $routeGroup) {
+                    if($routeGroup != '.' && $routeGroup != '..'){
+                        $this->loadRoutesFrom(base_path(config('raw')['routes_default_path'])."\\".$routeGroup);
+                    }
                 }
             }
         }
