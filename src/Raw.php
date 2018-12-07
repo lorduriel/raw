@@ -56,17 +56,20 @@ class Raw
         $this->reader = new AnnotationReader();
         $this->options = $options;
 
-        $modelsFromPath = scandir(config('raw')['models_default_path']);
+        $modelsPath = config('raw')['models_default_path'];
+        $modelsPath = str_replace("\\", DIRECTORY_SEPARATOR , $modelsPath);
+
+        $modelsFromPath = scandir($modelsPath);
 
         foreach ($modelsFromPath as $model) {
             if($model != '.' && $model != '..'){
                 $model = str_replace( ".php", "", $model);
                 if(sizeof($specificModels) > 0 && in_array($model, $specificModels)){
-                    $model = config('raw')['models_default_namespace']."\\".$model;
+                    $model = config('raw')['models_default_namespace'].'\\'.$model;
                     array_push($this->models, get_class(new $model()));
                 }
                 if(sizeof($specificModels) == 0) {
-                    $model = config('raw')['models_default_namespace']."\\".$model;
+                    $model = config('raw')['models_default_namespace'].'\\'.$model;
                     array_push($this->models, get_class(new $model()));
                 }
             }
@@ -80,13 +83,13 @@ class Raw
      */
     public function run()
     {
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\Rawable.php');
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\HasMany.php');
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\BelongsTo.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'Rawable.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'HasMany.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'BelongsTo.php');
 
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\RawableController.php');
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\RawableRepository.php');
-        AnnotationRegistry::registerFile(__DIR__ . '\annotations\RawableContract.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'RawableController.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'RawableRepository.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'RawableContract.php');
         
         $this->createDirs();
         $this->getModels();
@@ -99,15 +102,20 @@ class Raw
      */
     public function createDirs()
     {   
+        $routesPath = config('raw')['routes_default_path'];
+        $routesPath = str_replace("\\", DIRECTORY_SEPARATOR , $routesPath);
 
-        if (!file_exists(config('raw')['routes_default_path'])) {
-             mkdir(config('raw')['routes_default_path'], 0777, true);
+        $repositoriesPath = config('raw')['repositories_default_path'];
+        $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
+
+        if (!file_exists($routesPath)) {
+            mkdir($routesPath, 0777, true);
         }
 
-        if (!file_exists(config('raw')['repositories_default_path'])) {
-            mkdir(config('raw')['repositories_default_path'], 0777, true);
-            if (!file_exists(config('raw')['repositories_default_path'].'/Contracts')) {
-                mkdir(config('raw')['repositories_default_path'].'/Contracts', 0777, true);
+        if (!file_exists($repositoriesPath)) {
+            mkdir($repositoriesPath, 0777, true);
+            if (!file_exists($repositoriesPath.DIRECTORY_SEPARATOR.'Contracts')) {
+                mkdir($repositoriesPath.DIRECTORY_SEPARATOR.'Contracts', 0777, true);
             }
         }
 
@@ -208,21 +216,24 @@ class Raw
 
         $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\"), 1);
 
-        $desinationPath = config('raw')['contracts_default_path'];
+        $destinationPath = config('raw')['contracts_default_path'];
         if(isset($path)){
-            $desinationPath = $path;
+            $destinationPath = $path;
         }
 
-        if (!file_exists($desinationPath.'\\')) {
-            mkdir($desinationPath.'\\', 0777, true);
+        $destinationPath = str_replace("\\", DIRECTORY_SEPARATOR , $destinationPath);
+
+        if (!file_exists($destinationPath.DIRECTORY_SEPARATOR)) {
+            mkdir($destinationPath.DIRECTORY_SEPARATOR, 0777, true);
         }
        
-        $productionFileName = $desinationPath.'\\'.$classWithoutNamespace."Contract.php";
+        $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Contract.php";
 
         $contractTemplate = new ContractStub($classWithoutNamespace, $hasMany, $belongsTo, $namespace);
         $output =  $contractTemplate->getTemplate();
         
         if(file_exists($productionFileName)){
+            echo "No existe".$productionFileName.PHP_EOL;
             if($this->options['force']=="true"){
                 $productionFileHandler = fopen($productionFileName, 'w');
                 fwrite($productionFileHandler, $output);
@@ -231,6 +242,7 @@ class Raw
                 echo "This Contract already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
+            echo "existe".$productionFileName.PHP_EOL;
             $productionFileHandler = fopen($productionFileName, 'w');
             fwrite($productionFileHandler, $output);
             fclose($productionFileHandler);
@@ -253,18 +265,20 @@ class Raw
 
         $modelInstance = new $model();
 
-        $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\"), 1);
+        $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\" ), 1);
 
-        $desinationPath = config('raw')['repositories_default_path'];
+        $destinationPath = config('raw')['repositories_default_path'];
         if(isset($path)){
-            $desinationPath = $path;
+            $destinationPath = $path;
         }
 
-        if (!file_exists($desinationPath.'\\')) {
-            mkdir($desinationPath.'\\', 0777, true);
+        $destinationPath = str_replace("\\", DIRECTORY_SEPARATOR , $destinationPath);
+
+        if (!file_exists($destinationPath.DIRECTORY_SEPARATOR)) {
+            mkdir($destinationPath.DIRECTORY_SEPARATOR, 0777, true);
         }
 
-        $productionFileName = $productionFileName = $desinationPath."\\".$classWithoutNamespace."Repository.php";
+        $productionFileName = $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Repository.php";
 
         $repositoryTemplate = new RepositoryStub($classWithoutNamespace, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace);
         $output =  $repositoryTemplate->getTemplate();
@@ -275,7 +289,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Repository already exists. If you want to overwrite it use '--force'".PHP_EOL;
+                echo "This Repository already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -301,20 +315,22 @@ class Raw
 
         $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\"), 1);
 
-        $desinationPath = config('raw')['controllers_default_path'];
+        $destinationPath = config('raw')['controllers_default_path'];
         if(isset($path)){
-            $desinationPath = $path;
+            $destinationPath = $path;
         }
 
-        if (!file_exists($desinationPath.'\\')) {
-            mkdir($desinationPath.'\\', 0777, true);
+        $destinationPath = str_replace("\\", DIRECTORY_SEPARATOR , $destinationPath);
+
+        if (!file_exists($destinationPath.DIRECTORY_SEPARATOR)) {
+            mkdir($destinationPath.DIRECTORY_SEPARATOR, 0777, true);
         }
 
-        $productionFileName = $desinationPath.'\\'.$classWithoutNamespace."Controller.php";
+        $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Controller.php";
 
         $uses = class_uses($modelInstance);
         $hasValidations = false;
-        var_dump($uses);
+        
         if(in_array("LoRDFM\Raw\RawValidation", $uses)){
             $hasValidations = true;
         }
@@ -360,8 +376,10 @@ class Raw
 
         $groupOutput = "<?php\n".$output;
 
-        $desinationPath = config('raw')['routes_default_path'];
-        $productionFileName = $desinationPath.'\\'.lcfirst($classWithoutNamespace)."-routes.php";
+        $destinationPath = config('raw')['routes_default_path'];
+        $destinationPath = str_replace("\\", DIRECTORY_SEPARATOR , $destinationPath);
+        
+        $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.lcfirst($classWithoutNamespace)."-routes.php";
 
         if(file_exists($productionFileName)){
             if($this->options['force']=="true"){

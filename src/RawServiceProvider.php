@@ -23,8 +23,10 @@ class RawServiceProvider extends ServiceProvider
             RepositoryCommand::class
         ]);
 
+        /*
         if(config('raw') != null){
             if (file_exists(base_path(config('raw')['routes_default_path']))) {
+                echo "exists";
                 $routeGroups = scandir(base_path(config('raw')['routes_default_path']));
                 foreach ($routeGroups as $routeGroup) {
                     if($routeGroup != '.' && $routeGroup != '..'){
@@ -33,6 +35,7 @@ class RawServiceProvider extends ServiceProvider
                 }
             }
         }
+        */
         
     }
 

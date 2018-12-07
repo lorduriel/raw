@@ -57,7 +57,7 @@ class ContractStub
 		$this->belongsTo = $belongsTo;
 		$this->placeHolder = "RawableModelClass";
 		$this->namespace = $namespace;
-		$this->template = file_get_contents(__DIR__."\\..\stubs\\contract.plain.stub");
+		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract.plain.stub");
 	}
 
 
@@ -78,7 +78,7 @@ class ContractStub
 			
 			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
 
-			$hasManyTemplate = file_get_contents(__DIR__."\\..\stubs\\contract_hasmany_belongsto.plain.stub");
+			$hasManyTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract_hasmany_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $hasManyTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $this->placeHolder, $manyModelsSubstitution);
@@ -113,7 +113,7 @@ class ContractStub
 			
 			$pluralizedModel = $this->inflector->pluralize($this->classWithoutNamespace);
 
-			$belongsToTemplate = file_get_contents(__DIR__."\\..\stubs\\contract_hasmany_belongsto.plain.stub");
+			$belongsToTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract_hasmany_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $belongsToTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $relationShipModel,  $manyModelsSubstitution);

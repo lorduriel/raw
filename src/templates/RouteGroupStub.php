@@ -59,7 +59,7 @@ class RouteGroupStub
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->controllerNamespace = $controllerNamespace;
-		$this->template = file_get_contents(__DIR__."\\..\stubs\\route_group.plain.stub");
+		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group.plain.stub");
 	}
 
 
@@ -80,7 +80,7 @@ class RouteGroupStub
 			
 			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
 
-			$hasManyTemplate = file_get_contents(__DIR__."\\..\stubs\\route_group_hasmany.plain.stub");
+			$hasManyTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group_hasmany.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $hasManyTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $this->classWithoutNamespace, $manyModelsSubstitution);
@@ -115,7 +115,7 @@ class RouteGroupStub
 			
 			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
 
-			$belongsToTemplate = file_get_contents(__DIR__."\\..\stubs\\route_group_belongsto.plain.stub");
+			$belongsToTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $belongsToTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $relationShipModel, $manyModelsSubstitution);

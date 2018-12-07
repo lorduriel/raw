@@ -24,7 +24,7 @@ class RouteStub
 	function __construct($routes)
 	{	
 		$this->routes = $routes;
-		$this->template = file_get_contents(__DIR__."\\..\stubs\\routes.plain.stub");
+		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."routes.plain.stub");
 	}
 
 	public function getTemplate()

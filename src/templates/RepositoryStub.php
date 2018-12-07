@@ -67,7 +67,7 @@ class RepositoryStub
 		$this->placeHolder = "RawableModelClass";
 		$this->repositoryNamespace = $repositoryNamespace;
 		$this->contractNamespace = $contractNamespace;
-		$this->template = file_get_contents(__DIR__."\\..\stubs\\repository.plain.stub");;
+		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."repository.plain.stub");;
 	}
 
 
@@ -88,7 +88,7 @@ class RepositoryStub
 			
 			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
 
-			$hasManyTemplate = file_get_contents(__DIR__."\\..\stubs\\repository_hasmany.plain.stub");
+			$hasManyTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."repository_hasmany.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $hasManyTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $this->placeHolder, $manyModelsSubstitution);
@@ -125,7 +125,7 @@ class RepositoryStub
 			
 			$pluralizedModel = $this->inflector->pluralize($this->classWithoutNamespace);
 
-			$belongsToTemplate = file_get_contents(__DIR__."\\..\stubs\\repository_belongsto.plain.stub");
+			$belongsToTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."repository_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $belongsToTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $relationShipModel, $manyModelsSubstitution);

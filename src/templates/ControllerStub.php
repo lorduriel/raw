@@ -75,7 +75,7 @@ class ControllerStub
 		$this->controllerNamespace = $controllerNamespace;
 		$this->contractNamespace = $contractNamespace;
 		$this->hasValidations = $hasValidations;
-		$this->template = file_get_contents(__DIR__."\\..\stubs\\controller.plain.stub");
+		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."controller.plain.stub");
 	}
 
 
@@ -96,7 +96,7 @@ class ControllerStub
 			
 			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
 
-			$hasManyTemplate = file_get_contents(__DIR__."\\..\stubs\\controller_hasmany_belongsto.plain.stub");
+			$hasManyTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."controller_hasmany_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $hasManyTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $this->placeHolder, $manyModelsSubstitution);
@@ -132,7 +132,7 @@ class ControllerStub
 			
 			$pluralizedModel = $this->inflector->pluralize($this->classWithoutNamespace);
 
-			$belongsToTemplate = file_get_contents(__DIR__."\\..\stubs\\controller_hasmany_belongsto.plain.stub");
+			$belongsToTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."controller_hasmany_belongsto.plain.stub");
 
 			$manyModelsSubstitution = str_replace("\${ManyModels}", $pluralizedModel, $belongsToTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $relationShipModel, $manyModelsSubstitution);
