@@ -2,7 +2,7 @@
 	Route::group(['prefix' => '${lcFirstRawableModelClass}'], function (){
 
 		//Get all ${lcFirstRawableModelClass}
-		Route::get('all/', '${Controller}r@getAll${RawableModelClassPlural}');
+		Route::get('all/', '${Controller}@getAll${RawableModelClassPlural}');
 
 		//Get paginated ${lcFirstRawableModelClass}
 		Route::get('paginated/{limit}/{offset}/{search?}', '${Controller}@getPaginated${RawableModelClassPlural}');
