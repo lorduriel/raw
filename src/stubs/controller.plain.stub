@@ -178,7 +178,7 @@ class RawableModelClassController extends Controller
     {
         try {
 
-            $response = $this->projects->getAllRawableModelClassPlural();
+            $response = $this->repository->getAllRawableModelClassPlural();
             return response()->json($response);
             
         } catch (Exception $e) {
@@ -190,7 +190,7 @@ class RawableModelClassController extends Controller
     {
         try {
 
-            $response = $this->projects->getPaginatedRawableModelClassPlural($auth, $limit, $offset, $search);
+            $response = $this->repository->getPaginatedRawableModelClassPlural($auth, $limit, $offset, $search);
             return response()->json($response);
 
         } catch (Exception $e) {
@@ -202,7 +202,7 @@ class RawableModelClassController extends Controller
     {
         try {
 
-            $response = $this->projects->getCountRawableModelClassPlural($auth, $limit, $offset, $search);
+            $response = $this->repository->getCountRawableModelClassPlural($auth, $limit, $offset, $search);
             return response()->json($response);
 
         } catch (Exception $e) {
