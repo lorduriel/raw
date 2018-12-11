@@ -72,6 +72,7 @@ class ControllerStub
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->placeHolder = "RawableModelClass";
+		$this->placeHolderPlural = "RawableModelClassPlural";
 		$this->controllerNamespace = $controllerNamespace;
 		$this->contractNamespace = $contractNamespace;
 		$this->hasValidations = $hasValidations;
@@ -174,6 +175,8 @@ class ControllerStub
 
 		$this->template = $this->hasManyRelationships();
 		$this->template = $this->belongsToRelationships();
+
+		$this->template =  str_replace($this->placeHolderPlural, $this->inflector->pluralize($this->classWithoutNamespace), $this->template);
 
 		$this->template =  str_replace($this->placeHolder, $this->classWithoutNamespace, $this->template);
 

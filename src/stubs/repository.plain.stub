@@ -21,7 +21,7 @@ class RawableModelClassRepository implements RawableModelClassContract
 		$this->tag = 'Repository:RawableModelClass';
 	}
 
-	public function getAllRawableModelClasss($auth){
+	public function getAllRawableModelClassPlural($auth){
 		try {
 			$models = $this->model->all();
 			return $models;
@@ -30,7 +30,7 @@ class RawableModelClassRepository implements RawableModelClassContract
 		}
 	}
 
-	public function getPaginatedRawableModelClasss($auth, $limit, $offset, $search){
+	public function getPaginatedRawableModelClassPlural($auth, $limit, $offset, $search){
 		try {
 
 			if(isset($search)){
@@ -55,7 +55,7 @@ class RawableModelClassRepository implements RawableModelClassContract
 	}
 
 
-	public function getCountRawableModelClasss($auth, $search){
+	public function getCountRawableModelClassPlural($auth, $search){
 		try {
 
 			if(isset($search)){

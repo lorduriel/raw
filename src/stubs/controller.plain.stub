@@ -174,11 +174,11 @@ class RawableModelClassController extends Controller
         }
     }
 
-    public function getAllRawableModelClass()
+    public function getAllRawableModelClassPlural()
     {
         try {
 
-            $response = $this->projects->getAllRawableModelClass();
+            $response = $this->projects->getAllRawableModelClassPlural();
             return response()->json($response);
             
         } catch (Exception $e) {
@@ -186,11 +186,11 @@ class RawableModelClassController extends Controller
         }
     }
 
-    public function getPaginatedRawableModelClass($limit, $offset, $search = null)
+    public function getPaginatedRawableModelClassPlural($limit, $offset, $search = null)
     {
         try {
 
-            $response = $this->projects->getPaginatedRawableModelClass($auth, $limit, $offset, $search);
+            $response = $this->projects->getPaginatedRawableModelClassPlural($auth, $limit, $offset, $search);
             return response()->json($response);
 
         } catch (Exception $e) {
@@ -198,11 +198,11 @@ class RawableModelClassController extends Controller
         }
     }
 
-    public function getCountRawableModelClass($search = null)
+    public function getCountRawableModelClassPlural($search = null)
     {
         try {
 
-            $response = $this->projects->getCountRawableModelClass($auth, $limit, $offset, $search);
+            $response = $this->projects->getCountRawableModelClassPlural($auth, $limit, $offset, $search);
             return response()->json($response);
 
         } catch (Exception $e) {
