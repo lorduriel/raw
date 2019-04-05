@@ -51,7 +51,7 @@
     {
         try {
 
-            $response = $this->repository->getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search);
+            $response = $this->repository->getCount${ManyModels}By${ByModel}($auth, $id, $search);
 
             return response()->json($response);
 

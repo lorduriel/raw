@@ -1,0 +1,20 @@
+    /**
+     * Get ${OneModels} by a ${ByModel}
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function get${OneModels}By${ByModel}($id)
+    {
+        try {
+
+            $response = $this->repository->get${OneModels}By${ByModel}($auth, $id);
+
+            return response()->json($response);
+
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }

@@ -21,6 +21,13 @@ class ContractStub
 	protected $classWithoutNamespace;
 
 	/**
+     * Array of current model's 'hasOne' relationships
+     *
+     * @var array
+     */
+	protected $hasOne;
+
+	/**
      * Array of current model's 'toMany' relationships
      *
      * @var array
@@ -48,11 +55,12 @@ class ContractStub
      */
 	protected $inflector;
 
-	function __construct($classWithoutNamespace, $hasMany, $belongsTo, $namespace = null)
+	function __construct($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $namespace = null)
 	{	
 		$this->inflector = Inflector::get('en');
 
 		$this->classWithoutNamespace = $classWithoutNamespace;
+		$this->hasOne = $hasOne;
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->placeHolder = "RawableModelClass";
@@ -60,6 +68,37 @@ class ContractStub
 		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract.plain.stub");
 	}
 
+	public function hasOneRelationships()
+	{	
+		if(!sizeof($this->hasOne)>0){
+			
+			$relationships = str_replace("\${hasOneRelationships}", "", $this->template);
+
+			$this->template = $relationships;
+
+			return $this->template;
+		}
+
+		$relationships = "";
+
+		foreach ($this->hasOne as $relationShipModel) {
+
+			$hasOneTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract_hasone.plain.stub");
+
+			$oneModelsSubstitution = str_replace("\${OneModels}", $relationShipModel, $hasOneTemplate);
+			$byModelSubstitution = str_replace("\${ByModel}", $this->placeHolder, $oneModelsSubstitution);
+
+			$relationshipsSubstitution = $byModelSubstitution;
+
+			$relationships = $relationships.$relationshipsSubstitution."\n";
+			
+		}
+
+		$this->template = str_replace("\${hasOneRelationships}", $relationships, $this->template);
+
+		return $this->template;
+			
+	}
 
 	public function hasManyRelationships()
 	{	
@@ -136,7 +175,8 @@ class ContractStub
 		if(isset($this->namespace)){
 			$namespace = $this->namespace;
 		}
-
+		
+		$this->template = $this->hasOneRelationships();
 		$this->template = $this->hasManyRelationships();
 		$this->template = $this->belongsToRelationships();
 

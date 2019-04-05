@@ -18,5 +18,5 @@ interface RawableModelClassContract{
 
 	public function deleteRawableModelClass($auth, $category);
 
-	${belongsToRelationships}${hasManyRelationships}
+	${hasOneRelationships}${belongsToRelationships}${hasManyRelationships}
 }

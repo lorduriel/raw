@@ -23,6 +23,13 @@ class RepositoryStub
 	protected $classWithoutNamespace;
 
 	/**
+     * Array of current model's 'toOne' relationships
+     *
+     * @var array
+     */
+	protected $hasOne;
+
+	/**
      * Array of current model's 'toMany' relationships
      *
      * @var array
@@ -57,11 +64,12 @@ class RepositoryStub
      */
 	protected $inflector;
 
-	function __construct($classWithoutNamespace, $hasMany, $belongsTo, $repositoryNamespace = null, $contractNamespace = null)
+	function __construct($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $repositoryNamespace = null, $contractNamespace = null)
 	{	
 		$this->inflector = Inflector::get('en');
 
 		$this->classWithoutNamespace = $classWithoutNamespace;
+		$this->hasOne = $hasOne;
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->placeHolder = "RawableModelClass";
@@ -71,6 +79,39 @@ class RepositoryStub
 		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."repository.plain.stub");;
 	}
 
+
+	public function hasOneRelationships()
+	{	
+		if(!sizeof($this->hasOne)>0){
+			
+			$relationships = str_replace("\${hasOneRelationships}", "", $this->template);
+
+			$this->template = $relationships;
+
+			return $this->template;
+		}
+
+		$relationships = "";
+
+		foreach ($this->hasOne as $relationShipModel) {
+
+			$hasOneTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."repository_hasone.plain.stub");
+
+			$OneModelsSubstitution = str_replace("\${OneModels}", $relationShipModel, $hasOneTemplate);
+			$byModelSubstitution = str_replace("\${ByModel}", $this->placeHolder, $OneModelsSubstitution);
+			$lcFirstModelSubstitution = str_replace("\${lcFirstOneModel}", lcfirst($relationShipModel), $byModelSubstitution);
+
+			$relationshipsSubstitution = $lcFirstModelSubstitution;
+
+			$relationships = $relationships.$relationshipsSubstitution."\n";
+			
+		}
+
+		$this->template = str_replace("\${hasOneRelationships}", $relationships, $this->template);
+
+		return $this->template;
+			
+	}
 
 	public function hasManyRelationships()
 	{	
@@ -161,6 +202,8 @@ class RepositoryStub
 			$contractNamespace = $this->contractNamespace;
 		}
 
+		$this->template = $this->hasOneRelationships();
+
 		$this->template = $this->hasManyRelationships();
 
 		$this->template = $this->belongsToRelationships();
@@ -172,8 +215,6 @@ class RepositoryStub
 		$this->template =  str_replace($this->placeHolderPlural, $this->inflector->pluralize($this->classWithoutNamespace), $this->template);
 
 		$this->template =  str_replace($this->placeHolder, $this->classWithoutNamespace, $this->template);
-
-
 
 		return $this->template;
 	}

@@ -1,0 +1,1 @@
+public function get${OneModels}By${ByModel}($auth, $id);

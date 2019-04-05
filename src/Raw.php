@@ -12,6 +12,7 @@ use LoRDFM\Raw\Templates\RouteGroupStub;
 use LoRDFM\Raw\Templates\RouteStub;
 
 use LoRDFM\Raw\Annotations\Rawable;
+use LoRDFM\Raw\Annotations\HasOne;
 use LoRDFM\Raw\Annotations\HasMany;
 use LoRDFM\Raw\Annotations\BelongsTo;
 use LoRDFM\Raw\Annotations\RawableController;
@@ -84,6 +85,7 @@ class Raw
     public function run()
     {
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'Rawable.php');
+        AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'HasOne.php');
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'HasMany.php');
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'BelongsTo.php');
 
@@ -150,6 +152,7 @@ class Raw
             if ($annot instanceof Rawable) {
                 echo "Making repository for ".$model.PHP_EOL;
                 
+                $hasOne = [];
                 $hasMany = [];
                 $belongsTo = [];
 
@@ -162,7 +165,14 @@ class Raw
                 $repositoryPath = null;
                 $repositoryNamespace = null;
 
+                # var_dump($classAnnotations);
+
                 foreach ($classAnnotations as $annot) {
+                    
+                    if ($annot instanceof HasOne) {
+                        $hasOne = $annot->getModels();
+                    }
+
                     if ($annot instanceof HasMany) {
                         $hasMany = $annot->getModels();
                     }
@@ -188,11 +198,11 @@ class Raw
 
                 }
 
-                $this->createContract($model, $hasMany, $belongsTo, $contractPath, $contractNamespace);
-                $this->createRepository($model, $hasMany, $belongsTo, $repositoryPath, $repositoryNamespace, $contractNamespace);
-                $this->createController($model, $hasMany, $belongsTo, $controllerPath, $controllerNamespace, $contractNamespace);
+                $this->createContract($model, $hasOne, $hasMany, $belongsTo, $contractPath, $contractNamespace);
+                $this->createRepository($model, $hasOne, $hasMany, $belongsTo, $repositoryPath, $repositoryNamespace, $contractNamespace);
+                $this->createController($model, $hasOne, $hasMany, $belongsTo, $controllerPath, $controllerNamespace, $contractNamespace);
 
-                $routeGroup = $this->createRouteGroups($model, $hasMany, $belongsTo, $controllerNamespace);
+                $routeGroup = $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
 
             }
         }
@@ -209,7 +219,7 @@ class Raw
      * @param String $namespace
      * @return void 
      */
-    public function createContract($model, $hasMany, $belongsTo, $path = null, $namespace = null)
+    public function createContract($model, $hasOne, $hasMany, $belongsTo, $path = null, $namespace = null)
     {   
 
         $modelInstance = new $model();
@@ -229,7 +239,7 @@ class Raw
        
         $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Contract.php";
 
-        $contractTemplate = new ContractStub($classWithoutNamespace, $hasMany, $belongsTo, $namespace);
+        $contractTemplate = new ContractStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $namespace);
         $output =  $contractTemplate->getTemplate();
         
         if(file_exists($productionFileName)){
@@ -238,7 +248,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Contract already exists. If you want to overwrite it use '--force'".PHP_EOL;
+                echo "This Contract already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -258,7 +268,7 @@ class Raw
      * @param String $contractNamespace
      * @return void 
      */
-    public function createRepository($model, $hasMany, $belongsTo, $path = null, $controllerNamespace = null, $contractNamespace = null)
+    public function createRepository($model,$hasOne, $hasMany, $belongsTo, $path = null, $controllerNamespace = null, $contractNamespace = null)
     {    
 
         $modelInstance = new $model();
@@ -278,7 +288,7 @@ class Raw
 
         $productionFileName = $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Repository.php";
 
-        $repositoryTemplate = new RepositoryStub($classWithoutNamespace, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace);
+        $repositoryTemplate = new RepositoryStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace);
         $output =  $repositoryTemplate->getTemplate();
 
         if(file_exists($productionFileName)){
@@ -307,7 +317,7 @@ class Raw
      * @param String $contractNamespace
      * @return void 
      */
-    public function createController($model, $hasMany, $belongsTo, $path = null, $controllerNamespace = null, $contractNamespace = null)
+    public function createController($model, $hasOne, $hasMany, $belongsTo, $path = null, $controllerNamespace = null, $contractNamespace = null)
     {   
         $modelInstance = new $model();
 
@@ -333,7 +343,7 @@ class Raw
             $hasValidations = true;
         }
 
-        $repositoryTemplate = new ControllerStub($classWithoutNamespace, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace, $hasValidations);
+        $repositoryTemplate = new ControllerStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace, $hasValidations);
         $output =  $repositoryTemplate->getTemplate();
 
         if(file_exists($productionFileName)){
@@ -342,7 +352,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Controller already exists. If you want to overwrite it use '--force'".PHP_EOL;
+                echo "This Controller already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -360,7 +370,7 @@ class Raw
      * @param String $controllerNamespace 
      * @return void 
      */
-    public function createRouteGroups($model, $hasMany, $belongsTo, $controllerNamespace = null)
+    public function createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace = null)
     {
 
         $modelInstance = new $model();
@@ -369,7 +379,7 @@ class Raw
 
         $controller = $classWithoutNamespace."Controller";
 
-        $routeGroupTemplate = new RouteGroupStub($classWithoutNamespace, $controller, $hasMany, $belongsTo, $controllerNamespace);
+        $routeGroupTemplate = new RouteGroupStub($classWithoutNamespace, $controller, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
         $output =  $routeGroupTemplate->getTemplate();
 
         $groupOutput = "<?php\n".$output;
@@ -385,7 +395,7 @@ class Raw
                 fwrite($productionFileHandler, $groupOutput);
                 fclose($productionFileHandler);
             } else {
-                echo "This RouteGroup already exists. If you want to overwrite it use '--force'".PHP_EOL;
+                echo "This RouteGroup already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');

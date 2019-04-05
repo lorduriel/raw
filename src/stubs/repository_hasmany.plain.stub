@@ -1,4 +1,4 @@
-public function getAll${ManyModels}By${ByModel}($auth, $id){
+    public function getAll${ManyModels}By${ByModel}($auth, $id){
 
 		try {
 				

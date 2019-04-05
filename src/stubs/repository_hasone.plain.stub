@@ -1,0 +1,21 @@
+    /**
+     * Get a ${OneModels} by a ${ByModel}
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function get${OneModels}By${ByModel}($auth, $id)
+    {
+        try {
+            
+            $model =  $this->model->findOrFail($id);
+            $response = $model->${lcFirstOneModel}();
+
+            return response()->json($response);
+
+            
+        } catch (Exception $e) {
+            Log::error($this->tag , ["ex" => $e->getMessage()]);
+        }
+    }

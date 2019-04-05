@@ -23,6 +23,13 @@ class RouteGroupStub
 	protected $classWithoutNamespace;
 
 	/**
+     * Array of current model's 'toOne' relationships
+     *
+     * @var array
+     */
+	protected $hasOne;
+
+	/**
      * Array of current model's 'toMany' relationships
      *
      * @var array
@@ -50,18 +57,52 @@ class RouteGroupStub
      */
 	protected $inflector;
 
-	function __construct($classWithoutNamespace, $controller, $hasMany, $belongsTo, $controllerNamespace = null)
+	function __construct($classWithoutNamespace, $controller, $hasOne, $hasMany, $belongsTo, $controllerNamespace = null)
 	{	
 		$this->inflector = Inflector::get('en');
 
 		$this->classWithoutNamespace = $classWithoutNamespace;
 		$this->controller = $controller;
+		$this->hasOne = $hasOne;
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->controllerNamespace = $controllerNamespace;
 		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group.plain.stub");
 	}
 
+
+	public function hasOneRelationships()
+	{	
+		if(!sizeof($this->hasOne)>0){
+			
+			$relationships = str_replace("\${hasOneRelationships}", "", $this->template);
+
+			$this->template = $relationships;
+
+			return $this->template;
+		}
+
+		$relationships = "";
+
+		foreach ($this->hasOne as $relationShipModel) {
+
+			$hasOneTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group_hasone.plain.stub");
+
+			$OneModelsSubstitution = str_replace("\${OneModels}", $relationShipModel, $hasOneTemplate);
+			$byModelSubstitution = str_replace("\${ByModel}", $this->classWithoutNamespace, $OneModelsSubstitution);
+			$lcFirstManuyModelsSubstitution = str_replace("\${lcFirstOneModelsPlural}", $this->inflector->pluralize(lcfirst($relationShipModel)), $byModelSubstitution);
+
+			$relationshipsSubstitution = $lcFirstManuyModelsSubstitution;
+
+			$relationships = $relationships.$relationshipsSubstitution."\n";
+			
+		}
+
+		$this->template = str_replace("\${hasOneRelationships}", $relationships, $this->template);
+
+		return $this->template;
+			
+	}
 
 	public function hasManyRelationships()
 	{	
@@ -98,7 +139,6 @@ class RouteGroupStub
 			
 	}
 
-
 	public function belongsToRelationships()
 	{		
 		if(!sizeof($this->belongsTo) > 0){
@@ -113,7 +153,7 @@ class RouteGroupStub
 
 		foreach ($this->belongsTo as $relationShipModel) {
 			
-			$pluralizedModel = $this->inflector->pluralize($relationShipModel);
+			$pluralizedModel = $this->inflector->pluralize($this->classWithoutNamespace);
 
 			$belongsToTemplate = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."route_group_belongsto.plain.stub");
 
@@ -142,6 +182,7 @@ class RouteGroupStub
 			$controllerNamespace = $this->controllerNamespace;
 		}
 
+		$this->template = $this->hasOneRelationships();
 		$this->template = $this->hasManyRelationships();
 		$this->template = $this->belongsToRelationships();
 

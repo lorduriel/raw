@@ -1,0 +1,1 @@
+Route::get('{id}/${lcFirstOneModel}/all/', '${Controller}@get${OneModels}By${ByModel}');
