@@ -11,13 +11,19 @@ namespace LoRDFM\Raw\Annotations;
  */
 final class RawableController
 {
+    /** @Required */
     public $namespace;
     public $path;
 
     public function __construct(array $values)
     {
-        $this->namespace = $values['namespace'];
-        $this->path = $values['path'];
+        if(array_key_exists("namespace", $values)){
+            $this->namespace = $values['namespace'];
+        }
+        
+        if(array_key_exists("path", $values)){
+            $this->path = $values['path'];
+        }
     }
 
     public function getNamespace()

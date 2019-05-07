@@ -26,6 +26,49 @@ Publish the `raw.php` configuiration file
 
     php artisan vendor:publish --provider="LoRDFM\Raw\ServiceProvider"
 
+## Annotate your model
+Declare the use of `LoRDFM\Raw\Annotations\Rawable` and add the annotation on top of your model.
+Be sure to not leave blank lines between the annotation and the class.
+
+MyModel.php
+
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Model;
+
+    use LoRDFM\Raw\Annotations\Rawable;
+
+    /**
+    *
+    * @Rawable
+    */
+    class MyModel extends Model
+    {
+
+    }
+
+
+Now, just run
+
+    php artisan raw:repository
+
+What happened?. We just built our typical `--resource Controller` along with a `Contract` interface to declare all crud related methods and a `Repository` class to implement them.
+
+By default they will be stored in  `app\Http\Controllers `, `app\Repositories ` and  `app\Repositories\Contracts `.
+
+As you may be expecting, y can create complex models with relationships. We support
+the nex relationships
+
+| Realation              |  Annotation        |
+| :------------------: | :-----------------: |
+|  one to many       |  @HasMany        |
+|  many to one       |  @BelongsTo      |
+|  has one               |  @HasOne          |
+
+
+
 
 ## Annotations
 The annotations are pretty straight forward, ech one handles the relation of the model to another model and the declaration of the files holding the repository pattern.
@@ -52,20 +95,21 @@ An array of models with related as `Many to One` from the current model
 
 ### @RawableController
 Handles the creation of the controllers.
-Requires `path` and a `namespace` to store and declare the `--resource` style controller for your model.
+Support `path` and a `namespace` to store and declare the `--resource` style controller for your model.
 ```
 * @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers\Api")
 ```
 
 ### @RawableContract
 Handles the cration of the `interface` class (aka 'contract') with the methods your repository should implement
+Support `path` and a `namespace` to store and declare the interface
 ```
 @RawableContract(path = "app\Repository\Contracts", namespace = "App\Repository\Contracts")
 ```
 
 ### @RawableRepository
 Handles the repository class creation.
-Requires `path` and a `namespace` to store and delcare the class
+Support `path` and a `namespace` to store and delcare the class
 ```
 @RawableRepository(path = "app\Repository", namespace = "App\Repository")
 ```

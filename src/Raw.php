@@ -93,8 +93,24 @@ class Raw
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'RawableRepository.php');
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR.'annotations'.DIRECTORY_SEPARATOR.'RawableContract.php');
         
-        $this->createDirs();
+        $this->createRoutesDirs();
         $this->getModels();
+    }
+
+    /**
+     * Generate the routes directories
+     *
+     * @return void 
+     */
+    public function createRoutesDirs()
+    {   
+        $routesPath = config('raw')['routes_default_path'];
+        $routesPath = str_replace("\\", DIRECTORY_SEPARATOR , $routesPath);
+
+        if (!file_exists($routesPath)) {
+            mkdir($routesPath, 0777, true);
+        }
+
     }
 
     /**
@@ -102,17 +118,10 @@ class Raw
      *
      * @return void 
      */
-    public function createDirs()
+    public function createRepositoriesDirs()
     {   
-        $routesPath = config('raw')['routes_default_path'];
-        $routesPath = str_replace("\\", DIRECTORY_SEPARATOR , $routesPath);
-
         $repositoriesPath = config('raw')['repositories_default_path'];
         $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
-
-        if (!file_exists($routesPath)) {
-            mkdir($routesPath, 0777, true);
-        }
 
         if (!file_exists($repositoriesPath)) {
             mkdir($repositoriesPath, 0777, true);
@@ -149,6 +158,7 @@ class Raw
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
 
         foreach ($classAnnotations as $annot) {
+
             if ($annot instanceof Rawable) {
                 echo "Making repository for ".$model.PHP_EOL;
                 
@@ -166,6 +176,9 @@ class Raw
                 $repositoryNamespace = null;
 
                 # var_dump($classAnnotations);
+                $hasContractDefinition = false;
+                $hasRepositoryDefinition = false;
+                $hasControllerDefinition = false;
 
                 foreach ($classAnnotations as $annot) {
                     
@@ -182,20 +195,81 @@ class Raw
                     }
 
                     if ($annot instanceof RawableContract) {
+                        
+                        $hasContractDefinition = true;
+
                         $contractPath = $annot->getPath();
                         $contractNamespace = $annot->getNamespace();
+
+                        if(!isset($contractPath)){
+                            $this->createRepositoriesDirs();
+                            $repositoriesPath = config('raw')['repositories_default_path'];
+                            $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
+                            $contractPath = $repositoriesPath.DIRECTORY_SEPARATOR.'Contracts';
+                        }
+
+                        if(!isset($contractNamespace)){
+                            $contractNamespace = "App\Repositories\Contracts";
+                        }
+
                     }
 
                     if ($annot instanceof RawableRepository) {
+
+                        $hasRepositoryDefinition = true;
+
                         $repositoryPath = $annot->getPath();
                         $repositoryNamespace = $annot->getNamespace();
+
+                        if(!isset($repositoryPath)){
+                            $this->createRepositoriesDirs();
+                            $repositoryPath = config('raw')['repositories_default_path'];
+                        }
+
+                        if(!isset($repositoryNamespace)){
+                            $repositoryNamespace = "App\Repositories";
+                        }
+                        
                     }
 
                     if ($annot instanceof RawableController) {
+                        
+                        $hasControllerDefinition = true;
+
                         $controllerPath = $annot->getPath();
                         $controllerNamespace = $annot->getNamespace();
+
+                        if(!isset($controllerPath)){
+                            $this->createRepositoriesDirs();
+                            $controllerPath = config('raw')['controllers_default_path'];
+                        }
+
+                        if(!isset($controllerNamespace)){
+                            $controllerNamespace = "App\Http\Controllers";
+                        }
                     }
 
+                }
+                
+                if(!$hasContractDefinition && !$hasRepositoryDefinition){
+                    $this->createRepositoriesDirs();
+                    $repositoriesPath = config('raw')['repositories_default_path'];
+                    $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
+                    $contractPath = $repositoriesPath.DIRECTORY_SEPARATOR.'Contracts';
+                }
+
+                if(!$hasContractDefinition){
+                    $contractNamespace = "App\Repositories\Contracts";
+                }
+
+                if(!$hasRepositoryDefinition){
+                    $repositoryNamespace = "App\Repositories";
+                    $repositoryPath = config('raw')['repositories_default_path'];
+                }
+
+                if(!$hasControllerDefinition){
+                    $controllerNamespace = "App\Http\Controllers";
+                    $controllerPath = config('raw')['controllers_default_path'];
                 }
 
                 $this->createContract($model, $hasOne, $hasMany, $belongsTo, $contractPath, $contractNamespace);

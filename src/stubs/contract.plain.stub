@@ -12,11 +12,11 @@ interface RawableModelClassContract{
 
 	public function readRawableModelClass($auth, $id);
 
-	public function createRawableModelClass($auth, $category);
+	public function createRawableModelClass($auth, $model);
 
-	public function updateRawableModelClass($auth, $category);
+	public function updateRawableModelClass($auth, $model);
 
-	public function deleteRawableModelClass($auth, $category);
+	public function deleteRawableModelClass($auth, $model);
 
 	${hasOneRelationships}${belongsToRelationships}${hasManyRelationships}
 }
