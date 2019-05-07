@@ -24,7 +24,7 @@ Add the provider to your `app.php`
 
 Publish the `raw.php` configuiration file
 
-    php artisan vendor:publish --provider="LoRDFM\Raw\ServiceProvider"
+    php artisan vendor:publish --provider="LoRDFM\Raw\RawServiceProvider"
 
 ## Annotate your model
 Declare the use of `LoRDFM\Raw\Annotations\Rawable` and add the annotation on top of your model.
