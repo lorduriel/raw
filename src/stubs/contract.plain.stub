@@ -4,11 +4,11 @@ namespace ${ContractNamespace};
 
 interface RawableModelClassContract{
 
-	public function getAllRawableModelClasss($auth);
+	public function getAllRawableModelClassPlural($auth);
 
-	public function getPaginatedRawableModelClasss($auth, $limit, $page, $search);
+	public function getPaginatedRawableModelClassPlural($auth, $limit, $page, $search);
 
-	public function getCountRawableModelClasss($auth, $search);
+	public function getCountRawableModelClassPlural($auth, $search);
 
 	public function readRawableModelClass($auth, $id);
 

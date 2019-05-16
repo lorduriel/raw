@@ -64,6 +64,7 @@ class ContractStub
 		$this->hasMany = $hasMany;
 		$this->belongsTo = $belongsTo;
 		$this->placeHolder = "RawableModelClass";
+		$this->placeHolderPlural = "RawableModelClassPlural";
 		$this->namespace = $namespace;
 		$this->template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."stubs".DIRECTORY_SEPARATOR."contract.plain.stub");
 	}
@@ -181,6 +182,7 @@ class ContractStub
 		$this->template = $this->belongsToRelationships();
 
 		$this->template =  str_replace("\${ContractNamespace}", $namespace, $this->template);
+		$this->template =  str_replace($this->placeHolderPlural, $this->inflector->pluralize($this->classWithoutNamespace), $this->template);
 		$this->template =  str_replace($this->placeHolder, $this->classWithoutNamespace, $this->template);
 		return $this->template;
 	}
