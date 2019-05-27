@@ -56,6 +56,24 @@ Now, just run
 
 What happened?. We just built our typical `--resource Controller` along with a `Contract` interface to declare all crud related methods and a `Repository` class to implement them.
 
+Dont forget to bind your repositories in your `Providers\AppServiceProvider.php`
+
+```
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        
+        // Other bindings
+
+        $this->app->bind('App\Repositories\Contracts\MyModelContract', 'App\Repositories\MyModelRepository');
+         
+    }
+```
+
 By default they will be stored in  `app\Http\Controllers `, `app\Repositories ` and  `app\Repositories\Contracts `.
 
 As you may be expecting, y can create complex models with relationships. We support

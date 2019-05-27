@@ -206,7 +206,7 @@ class RawableModelClassController extends Controller
     {
         try {
 
-            $response = $this->repository->getCountRawableModelClassPlural($auth, $limit, $offset, $search);
+            $response = $this->repository->getCountRawableModelClassPlural($auth, $search);
             return response()->json($response);
 
         } catch (Exception $e) {
