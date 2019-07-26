@@ -1,21 +1,25 @@
+
     /**
      * Get all ${ManyModels} by a ${ByModel}
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     *
+     * You can add a count by un-commenting 1 line
      */
-
     public function getAll${ManyModels}By${ByModel}($id)
     {
         try {
 
-            $response = $this->repository->getAll${ManyModels}By${ByModel}($auth, $id);
-
-            return response()->json($response);
-
+            $data = $this->repository->getAll${ManyModels}By${ByModel}($this->auth, $id);
+            $this->success['data'] = $data;
+            // $this->success["count"] = $data->count();
+            return response()->json($this->success);
             
         } catch (Exception $e) {
             Log::error($this->tag , ["ex" => $e->getMessage()]);
+            $this->error['errors'] = $e->getMessage();
+            return response()->json($this->error);
         }
     }
 
@@ -23,40 +27,50 @@
      * Get paginated ${ManyModels} by a ${ByModel}
      *
      * @param  int  $id
+     * @param  int  $limit
+     * @param  int  $offset
+     * @param  mixed  $search
      * @return \Illuminate\Http\Response
+     *
+     * You can add a count to your paginated response by un-commenting the 2 commented lines below
+     * or you can use the specific method
      */
-
     public function getPaginated${ManyModels}By${ByModel}($id, $limit, $page, $search = null)
     {
         try {
 
-            $response = $this->repository->getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search);
-
-            return response()->json($response);
-
+            $data = $this->repository->getPaginated${ManyModels}By${ByModel}($this->auth, $id, $limit, $page, $search);
+            // $count = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $search);
+            $this->success['data'] = $data;
+            // $this->success["count"] = $count;
+            return response()->json($this->success);
             
         } catch (Exception $e) {
             Log::error($this->tag , ["ex" => $e->getMessage()]);
+            $this->error['errors'] = $e->getMessage();
+            return response()->json($this->error);
         }
     }
 
-     /**
+    /**
      * Get count ${ManyModels} by a ${ByModel}
      *
      * @param  int  $id
+     * @param  mixed  $search
      * @return \Illuminate\Http\Response
      */
-
     public function getCount${ManyModels}By${ByModel}($id, $search = null)
     {
         try {
 
-            $response = $this->repository->getCount${ManyModels}By${ByModel}($auth, $id, $search);
+            $data = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $id, $search);
 
-            return response()->json($response);
-
+            $this->success['data'] = $data;
+            return response()->json($this->success);
             
         } catch (Exception $e) {
             Log::error($this->tag , ["ex" => $e->getMessage()]);
+            $this->error['errors'] = $e->getMessage();
+            return response()->json($this->error);
         }
     }

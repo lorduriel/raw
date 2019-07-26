@@ -1,21 +1,35 @@
     /**
      * Get a ${OneModels} by a ${ByModel}
      *
+     * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return ModelNamespace\OneModels
      */
 
     public function get${OneModels}By${ByModel}($auth, $id)
     {
         try {
-            
-            $model =  $this->model->findOrFail($id);
-            $response = $model->${lcFirstOneModel}();
 
-            return response()->json($response);
+            /**
+             * @todo
+             * TODO
+             *
+             * $auth implementation
+             */
+            if( true  ){
+
+                $model =  $this->model->findOrFail($id);
+                $data = $model->${lcFirstOneModel}();
+
+                return $data;
+
+            } else {
+                return $this->unauthorized;
+            }
 
             
         } catch (Exception $e) {
             Log::error($this->tag , ["ex" => $e->getMessage()]);
+            return $this->error;
         }
     }

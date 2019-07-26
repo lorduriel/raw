@@ -1,30 +1,75 @@
-    public function getAll${ManyModels}By${ByModel}($auth, $id){
+    
+	/**
+     * Get all ${ManyModels} by {ByModel}
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+	 * @param  int $id 
+	 *
+     * @return Illuminate\Database\Eloquent\Collection;
+     */
+	public function getAll${ManyModels}By${ByModel}($auth, $id){
 
 		try {
+
+			/**
+             * @todo
+             * TODO
+             *
+             * $auth implementation
+             */
+			if( true ){
 				
-			$model = $this->model->findOrFail($id);
+				$model = $this->model->findOrFail($id);
 
-			$relationShipCollenction = $model->${lcFirstManyModelsPlural}()->get();
+				$relationShipCollenction = $model->${lcFirstManyModelsPlural}()->get();
 
-			return $relationShipCollenction;
+				return $relationShipCollenction;
+
+			} else {
+
+                return $this->unauthorized;
+            }
+
 
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex' => $e->getMessage()]);
+			return $this->error;
 		}
 
 	}
 
+	/**
+     * Get paginated ${ManyModels} by {ByModel}
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+	 * @param  int $id 
+	 * @param  int $limit 
+	 * @param  int $page
+     * @param  mixed $search
+	 *
+     * @return Illuminate\Database\Eloquent\Collection;
+     */
 	public function getPaginated${ManyModels}By${ByModel}($auth, $id, $limit, $page, $search){
 
 		try {
 
-			$model = $this->model->findOrFail($id);
+			/**
+             * @todo
+             * TODO
+             *
+             * $auth implementation
+             */
+			if( true ){
+
+				$model = $this->model->findOrFail($id);
 
 				if(isset($search)){
 
 					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
 														/**
-														* @todo Search Implementation 
+														* @todo 
+														* TODO
+														* Search Implementation 
 														* 
 														*/
 														->skip($limit*$page)
@@ -43,43 +88,75 @@
 		            return $relationShipCollenction;
 				}
 
+			} else {
+
+                return $this->unauthorized;
+            }
+
+
 
 		} catch (Exception $e) {
 
-			Log::error($this->tag, ['ex'=>$e->getMessage()]);	
+			Log::error($this->tag, ['ex'=>$e->getMessage()]);
+			return $this->error;
 		}
 
 	}
 
+	/**
+     * Get paginated ${ManyModels} by {ByModel}
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+	 * @param  int $id 
+     * @param  mixed $search
+	 *
+     * @return Illuminate\Database\Eloquent\Collection;
+     */
 	public function getCount${ManyModels}By${ByModel}($auth, $id, $search){
 
 		try {
 
-			$model = $this->model->findOrFail($id);
+            /**
+             * @todo
+             * TODO
+             *
+             * $auth implementation
+             */
+			if( true ){
+
+				$model = $this->model->findOrFail($id);
 
 				if(isset($search)){
 
 					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
 														/**
-														* @todo Search Implementation 
+														* @todo
+														* TODO 
+														* Search Implementation 
 														* 
 														*/
-								                		->count();
+														->count();
 
 					return $relationShipCollenction;
 							
 				} else {
 
 					$relationShipCollenction = $model->${lcFirstManyModelsPlural}()
-								                		->count();
+														->count();
 								
-		            return $relationShipCollenction;
+					return $relationShipCollenction;
 				}
+
+			} else {
+
+                return $this->unauthorized;
+            }
 
 
 		} catch (Exception $e) {
 
 			Log::error($this->tag, ['ex'=>$e->getMessage()]);	
+			return $this->error;
 		}
 
 	}

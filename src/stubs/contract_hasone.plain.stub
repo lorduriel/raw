@@ -1,1 +1,2 @@
-public function get${OneModels}By${ByModel}($auth, $id);
+
+    public function get${OneModels}By${ByModel}($auth, $id);

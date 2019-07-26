@@ -5,121 +5,306 @@ namespace ${RepositoryNamespace};
 use ${ContractNamespace}\RawableModelClassContract;
 use Illuminate\Support\Facades\Log;
 
-use Exception;
-use App\Models\RawableModelClass;
+use ModelNamespace\RawableModelClass;
 ${belongsToModels}
+use Exception;
 use Auth;
 
 class RawableModelClassRepository implements RawableModelClassContract
 {
-	protected $model;
+	
 	protected $tag;
+	protected $model;
+	protected $error;
+	protected $unauthorized;
 
 	function __construct(RawableModelClass $model)
 	{
 		$this->model = $model;
 		$this->tag = 'Repository:RawableModelClass';
+        $this->error = ['status' => 'Error', 'code'=> 500];
+		$this->unauthorized = ['code' => 401, 'message' => 'Unauthorized by Policy'];
+
+		/**
+        * @todo
+        * TODO
+        *
+        * Auth implementation
+        * Many classes and authorization packages 
+		* have a way to perform auth, role and permission checks
+		* 
+		* Useful resources and implementations
+		* https://laravel.com/docs/5.8/authorization
+		* https://laravel.com/docs/5.8/authentication
+        * https://github.com/Zizaco/entrust
+		* https://github.com/tymondesigns/jwt-auth
+		*
+        */
 	}
 
+	/**
+     * Get all RawableModelClassPlural
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+	 *
+     * @return Illuminate\Database\Eloquent\Collection;
+     */
 	public function getAllRawableModelClassPlural($auth){
 		try {
-			$models = $this->model->all();
-			return $models;
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
+
+			if( true ){
+
+				$data = $this->model->all();
+				return $data;
+
+			} else {
+                return $this->unauthorized;
+            }
+
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex' => $e->getMessage()]);
+            return $this->error;
 		}
 	}
 
+	/**
+     * Get Paginated RawableModelClassPlural
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+	 * @param  int  $limit
+     * @param  int  $offset
+     * @param  mixed  $search
+	 *
+     * @return Illuminate\Database\Eloquent\Collection;
+     */
 	public function getPaginatedRawableModelClassPlural($auth, $limit, $offset, $search){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			if(isset($search)){
+			if( true ){
+			
+				if(isset($search)){
 
-				return $this->model
-					/**
-					* @todo Search Implementation 
-					* 
-					*/
-					->skip($limit*$offset)
-					->take($limit)
-					->get();
+					return $this->model
+						/**
+						* @todo 
+						* TODO
+						* Search Implementation 
+						* 
+						*/
+						->skip($limit*$offset)
+						->take($limit)
+						->get();
+
+				} else {
+
+					return $this->model
+						->skip($limit*$offset)
+						->take($limit)
+						->get();
+				}
+
 			} else {
-				return $this->model
-					->skip($limit*$offset)
-					->take($limit)
-					->get();
-			}
+                return $this->unauthorized;
+            }
+
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 
 
+	/**
+     * Get Paginated RawableModelClassPlural
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+     * @param  mixed  $search
+	 *
+     * @return int;
+     */
 	public function getCountRawableModelClassPlural($auth, $search){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			if(isset($search)){
+			if( true ){
 
-				return $this->model
-					/**
-					* @todo Search Implementation 
-					* 
-					*/
-					->count();
+				if(isset($search)){
+
+					return $this->model
+						/**
+						* @todo 
+						* TODO
+						* Search Implementation 
+						* 
+						*/
+						->count();
+
+				} else {
+
+					return $this->model
+						->count();
+
+				}
 
 			} else {
+                return $this->unauthorized;
+            }
 
-				return $this->model
-					->count();
-
-			}
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 
+	/**
+     * Get RawableModelClass by id
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+     * @param  int  $id
+	 *
+     * @return ModelNamespace\RawableModelClass;
+     */
 	public function readRawableModelClass($auth, $id){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			$model = $this->model->findOrFail($id);
-			return $model;
+			if( true ){
+
+				$model = $this->model->findOrFail($id);
+				return $model;
+
+			} else {
+                return $this->unauthorized;
+            }
 
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 
-
+	/**
+     * Create new RawableModelClass
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+     * @param  ModelNamespace\RawableModelClass  $model
+	 *
+     * @return ModelNamespace\RawableModelClass;
+     */
 	public function createRawableModelClass($auth, $model){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			$model->save();
-			return $model;
+			if( true ){
+
+				$model->save();
+				return $model;
+
+			} else {
+                return $this->unauthorized;
+            }
 
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 
+	/**
+     * Update RawableModelClass
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+     * @param  ModelNamespace\RawableModelClass  $model
+	 *
+     * @return ModelNamespace\RawableModelClass;
+     */
 	public function updateRawableModelClass($auth, $model){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			$model->save();
-			return $model;
+			if( true ){
+
+				$model->save();
+				return $model;
+
+			} else {
+                return $this->unauthorized;
+            }
 
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 
+	/**
+     * Delete RawableModelClass
+     *
+	 * @param  Illuminate\Contracts\Auth\Authenticatable|Illuminate\Contracts\Auth\Access\Authorizable  $auth
+     * @param  ModelNamespace\RawableModelClass  $model
+	 *
+     * @return ModelNamespace\RawableModelClass;
+     */
 	public function deleteRawableModelClass($auth, $model){
 		try {
+			
+			/**
+			 * @todo
+			 * TODO
+			 *
+			 * $auth implementation
+			 */
 
-			$model->delete();
-			return $model;
+			if( true ){
+				
+				$model->delete();
+				return $model;
+
+			} else {
+                return $this->unauthorized;
+            }
 			
 		} catch (Exception $e) {
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
+			return $this->error;
 		}
 	}
 	

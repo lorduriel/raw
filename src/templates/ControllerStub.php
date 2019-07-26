@@ -201,7 +201,7 @@ class ControllerStub
 			$contractNamespace = $this->contractNamespace;
 		}
 
-		$validations = "\n\t\t\t\t[]\n\t\t\t\t/**\n\t\t\t\t* @todo Validation implementation\n\t\t\t\t*/";
+		$validations = "\n\t\t\t\t[]\n\t\t\t\t/**\n\t\t\t\t* @todo \n\t\t\t\t* TODO \n\t\t\t\t* Validation implementation\n\t\t\t\t*/";
 
 		if($this->hasValidations){
 			$this->template =  str_replace("\${storeValidations}", "RawableModelClass::storeValidations()", $this->template);

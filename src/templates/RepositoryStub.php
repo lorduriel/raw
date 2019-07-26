@@ -208,6 +208,8 @@ class RepositoryStub
 
 		$this->template = $this->belongsToRelationships();
 
+		$this->template =  str_replace("ModelNamespace", config('raw')['models_default_namespace'], $this->template);
+
 		$this->template =  str_replace("\${RepositoryNamespace}", $repositoryNamespace, $this->template);
 
 		$this->template =  str_replace("\${ContractNamespace}", $contractNamespace, $this->template);
