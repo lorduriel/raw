@@ -238,14 +238,14 @@ and it will tell you on wich model is working and creating its repository
 If the repository for the model already exists you will be warned
 
     Making repository for App\Models\Author
-    This Contract already exists. If you want to overwrite it use '--force=true'
-    This Repository already exists. If you want to overwrite it use '--force=true'
-    This Controller already exists. If you want to overwrite it use '--force=true'
-    This RouteGroup already exists. If you want to overwrite it use '--force=true'
+    This Contract already exists. If you want to overwrite it use '--force'
+    This Repository already exists. If you want to overwrite it use '--force'
+    This Controller already exists. If you want to overwrite it use '--force'
+    This RouteGroup already exists. If you want to overwrite it use '--force'
 
-You can overwrite them using `--force=true`
+You can overwrite them using `--force`
 
-    php artisan raw:repository --force=true
+    php artisan raw:repository --force
 Be careful, the corresponding files will be completely overwritten.
 You may choose to run the command for just some models
 

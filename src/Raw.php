@@ -141,7 +141,7 @@ class Raw
     {
         foreach ($this->models as $model ) {
             # echo PHP_EOL.$model.PHP_EOL;
-            $this->isRawable($model);
+            $this->makeRawable($model);
         }
        
     }
@@ -152,7 +152,7 @@ class Raw
      * @param Class $model 
      * @return void 
      */
-    public function isRawable($model)
+    public function makeRawable($model)
     {
         $reflClass = new \ReflectionClass($model);
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
@@ -287,6 +287,7 @@ class Raw
      * Creates the contract for the Rawable Model
      *
      * @param Class $model 
+     * @param Array<Class> $hasOne
      * @param Array<Class> $hasMany
      * @param Array<Class> $belongsTo 
      * @param String $path 
@@ -322,7 +323,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Contract already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
+                echo "This Contract already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -335,6 +336,7 @@ class Raw
      * Creates the repository for the Rawable Model
      *
      * @param Class $model 
+     * @param Array<Class> $hasOne
      * @param Array<Class> $hasMany
      * @param Array<Class> $belongsTo 
      * @param String $path 
@@ -371,7 +373,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Repository already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
+                echo "This Repository already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -383,7 +385,8 @@ class Raw
     /**
      * Creates the controller for the Rawable Model
      *
-     * @param Class $model 
+     * @param Class $model
+     * @param Array<Class> $hasOne
      * @param Array<Class> $hasMany
      * @param Array<Class> $belongsTo 
      * @param String $path 
@@ -426,7 +429,7 @@ class Raw
                 fwrite($productionFileHandler, $output);
                 fclose($productionFileHandler);
             } else {
-                echo "This Controller already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
+                echo "This Controller already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
@@ -439,6 +442,7 @@ class Raw
      * Creates the route group for the Rawable Model
      *
      * @param Class $model 
+     * @param Array<Class> $hasOne
      * @param Array<Class> $hasMany
      * @param Array<Class> $belongsTo 
      * @param String $controllerNamespace 
@@ -469,13 +473,31 @@ class Raw
                 fwrite($productionFileHandler, $groupOutput);
                 fclose($productionFileHandler);
             } else {
-                echo "This RouteGroup already exists. If you want to overwrite it use '--force=true'".PHP_EOL;
+                echo "This RouteGroup already exists. If you want to overwrite it use '--force'".PHP_EOL;
             }
         } else {
             $productionFileHandler = fopen($productionFileName, 'w');
             fwrite($productionFileHandler, $groupOutput);
             fclose($productionFileHandler);
         }
+
+    }
+
+    /**
+     * Creates an importable json file for postman
+     *
+     * @param Class $model 
+     * @param Array<Class> $hasOne
+     * @param Array<Class> $hasMany
+     * @param Array<Class> $belongsTo 
+     * @return void 
+     */
+    public function createPostManCollection($model, $hasOne, $hasMany, $belongsTo)
+    {
+        $modelInstance = new $model();
+
+        $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\"), 1);
+
 
     }
 

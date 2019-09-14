@@ -12,14 +12,16 @@
         try {
 
             $data = $this->repository->getAll${ManyModels}By${ByModel}($this->auth, $id);
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             // $this->success["count"] = $data->count();
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
-            return response()->json($this->error);
+            $this->error["errors"] = $e->getMessage();
+            return response()->json($this->error, 500);
+
         }
     }
 
@@ -40,15 +42,17 @@
         try {
 
             $data = $this->repository->getPaginated${ManyModels}By${ByModel}($this->auth, $id, $limit, $page, $search);
-            // $count = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $search);
-            $this->success['data'] = $data;
+            // $count = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $id, $search);
+            $this->success["data"] = $data;
             // $this->success["count"] = $count;
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
-            return response()->json($this->error);
+            $this->error["errors"] = $e->getMessage();
+            return response()->json($this->error, 500);
+
         }
     }
 
@@ -65,12 +69,14 @@
 
             $data = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $id, $search);
 
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
-            return response()->json($this->error);
+            $this->error["errors"] = $e->getMessage();
+            return response()->json($this->error, 500);
+            
         }
     }

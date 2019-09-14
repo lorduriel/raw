@@ -11,12 +11,14 @@
 
             $data = $this->repository->get${OneModels}By${ByModel}($this->auth, $id);
 
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
-            return response()->json($this->error);
+            $this->error["errors"] = $e->getMessage();
+            return response()->json($this->error, 500);
+            
         }
     }

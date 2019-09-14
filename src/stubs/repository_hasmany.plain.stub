@@ -27,13 +27,16 @@
 
 			} else {
 
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
-            }
-
+            
+			}
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex' => $e->getMessage()]);
 			return $this->error;
+			
 		}
 
 	}
@@ -90,15 +93,16 @@
 
 			} else {
 
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
             }
-
 
 
 		} catch (Exception $e) {
 
 			Log::error($this->tag, ['ex'=>$e->getMessage()]);
 			return $this->error;
+
 		}
 
 	}
@@ -149,14 +153,16 @@
 
 			} else {
 
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
-            }
-
+            
+			}
 
 		} catch (Exception $e) {
 
 			Log::error($this->tag, ['ex'=>$e->getMessage()]);	
 			return $this->error;
+
 		}
 
 	}

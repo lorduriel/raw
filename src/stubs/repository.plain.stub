@@ -65,12 +65,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				return $data;
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex' => $e->getMessage()]);
             return $this->error;
+			
 		}
 	}
 
@@ -118,12 +123,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				}
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+
 		}
 	}
 
@@ -167,12 +177,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				}
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+
 		}
 	}
 
@@ -200,12 +215,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				return $model;
 
 			} else {
+				
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+
 		}
 	}
 
@@ -233,12 +253,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				return $model;
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+				
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+
 		}
 	}
 
@@ -266,12 +291,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				return $model;
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+				
             }
 
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+
 		}
 	}
 
@@ -299,12 +329,17 @@ class RawableModelClassRepository implements RawableModelClassContract
 				return $model;
 
 			} else {
+
+				Log::error($this->tag , ["ex" => $this->unauthorized]);
                 return $this->unauthorized;
+
             }
 			
 		} catch (Exception $e) {
+
 			Log::error($this->tag, ['ex'=> $e->getMessage()]);
 			return $this->error;
+			
 		}
 	}
 	

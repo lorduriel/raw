@@ -2,15 +2,15 @@
 	Route::group(['prefix' => '${lcFirstRawableModelClass}'], function (){
 
 		//Get all ${lcFirstRawableModelClass}
-		Route::get('all/', '${Controller}@getAll${RawableModelClassPlural}');
+		Route::get('all/', '\${Controller}@getAll${RawableModelClassPlural}');
 
 		//Get paginated ${lcFirstRawableModelClass}
-		Route::get('paginated/{limit}/{offset}/{search?}', '${Controller}@getPaginated${RawableModelClassPlural}');
-		Route::get('count/{search?}', '${Controller}@getCount${RawableModelClassPlural}');
+		Route::get('paginated/{limit}/{offset}/{search?}', '\${Controller}@getPaginated${RawableModelClassPlural}');
+		Route::get('count/{search?}', '\${Controller}@getCount${RawableModelClassPlural}');
 
 		${hasOneRelationships}${hasManyRelationships}${belongsToRelationships}
 	});
 
 	// resource '${lcFirstRawableModelClass}' routes
-	Route::resource('/${lcFirstRawableModelClass}', '${Controller}');
+	Route::resource('/${lcFirstRawableModelClass}', '\${Controller}');
 

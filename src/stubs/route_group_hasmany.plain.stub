@@ -1,6 +1,6 @@
-//Get all ${lcFirstManyModelsPlural} by ${ByModel}
-		Route::get('{id}/${lcFirstManyModelsPlural}/all/', '${Controller}@getAll${ManyModels}By${ByModel}');
+		//Get all ${lcFirstManyModelsPlural} by ${ByModel}
+		Route::get('{id}/${lcFirstManyModelsPlural}/all/', '\${Controller}@getAll${ManyModels}By${ByModel}');
 
 		//Get paginated ${lcFirstManyModelsPlural} by ${ByModel}
-		Route::get('{id}/${lcFirstManyModelsPlural}/paginated/{limit}/{offset}/{search?}', '${Controller}@getPaginated${ManyModels}By${ByModel}');
-		Route::get('{id}/${lcFirstManyModelsPlural}/count/{search?}', '${Controller}@getCount${ManyModels}By${ByModel}');
+		Route::get('{id}/${lcFirstManyModelsPlural}/paginated/{limit}/{offset}/{search?}', '\${Controller}@getPaginated${ManyModels}By${ByModel}');
+		Route::get('{id}/${lcFirstManyModelsPlural}/count/{search?}', '\${Controller}@getCount${ManyModels}By${ByModel}');

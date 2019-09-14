@@ -27,8 +27,8 @@ class RawableModelClassController extends Controller
     {
         $this->repository = $repository;
         $this->tag = "Controller:RawableModelClass";
-        $this->error = ['status' => 'Error', 'code'=> 500];
-        $this->success = ['status' => 'Success', 'code'=> 200];
+        $this->error = ["status" => "Error", "code"=> 500];
+        $this->success = ["status" => "Success", "code"=> 200];
 
         /**
         * @todo
@@ -90,21 +90,24 @@ class RawableModelClassController extends Controller
                 */ 
 
                 $data = $this->repository->createRawableModelClass($this->auth, $model);
-                $this->success['data'] = $data;
+                $this->success["data"] = $data;
                 
                 return response()->json($this->success);
             
             } else {
 
-                $this->error['errors'] = $validator->errors();
-                return response()->json($this->errors);
+                Log::error($this->tag , ["ex" => $validator->errors()]);
+                $this->error["errors"] = $validator->errors();
+                return response()->json($this->error);
 
             }
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -119,13 +122,15 @@ class RawableModelClassController extends Controller
         try {
             
             $data = $this->repository->readRawableModelClass($this->auth, $id);
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             return response()->json($this->success);
 
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -170,19 +175,23 @@ class RawableModelClassController extends Controller
                 */ 
 
                 $data = $this->repository->updateRawableModelClass($this->auth, $model);
-                $this->success['data'] = $data;
+                $this->success["data"] = $data;
                 return response()->json($this->success);
             
             } else {
 
-                $this->error['errors'] = $validator->errors();
-                return response()->json($this->errors);
+                Log::error($this->tag , ["ex" => $validator->errors()]);
+                $this->error["errors"] = $validator->errors();
+                return response()->json($this->error);
+                
             }
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -200,13 +209,15 @@ class RawableModelClassController extends Controller
 
             $data = $this->repository->deleteRawableModelClass($this->auth, $model);
             
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -222,14 +233,16 @@ class RawableModelClassController extends Controller
         try {
 
             $data = $this->repository->getAllRawableModelClassPlural($this->auth);
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             // $this->success["count"] = $data->count();
             return response()->json($this->success);
             
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -250,14 +263,16 @@ class RawableModelClassController extends Controller
 
             $data = $this->repository->getPaginatedRawableModelClassPlural($this->auth, $limit, $offset, $search);
             // $count =  $this->repository->getCountRawableModelClassPlural($this->auth, $search);
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             // $this->success["count"] = $count;
             return response()->json($this->success);
 
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
 
@@ -272,13 +287,15 @@ class RawableModelClassController extends Controller
         try {
 
             $data = $this->repository->getCountRawableModelClassPlural($this->auth, $search);
-            $this->success['data'] = $data;
+            $this->success["data"] = $data;
             return response()->json($this->success);
 
         } catch (Exception $e) {
+
             Log::error($this->tag , ["ex" => $e->getMessage()]);
-            $this->error['errors'] = $e->getMessage();
+            $this->error["errors"] = $e->getMessage();
             return response()->json($this->error);
+
         }
     }
     

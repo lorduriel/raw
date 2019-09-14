@@ -12,7 +12,7 @@ class RepositoryCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'raw:repository {models?*} {--f|force=false}';
+    protected $signature = 'raw:repository {models?*} {--force}';
 
     /**
      * The console command description.

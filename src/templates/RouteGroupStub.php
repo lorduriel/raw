@@ -90,7 +90,7 @@ class RouteGroupStub
 
 			$OneModelsSubstitution = str_replace("\${OneModels}", $relationShipModel, $hasOneTemplate);
 			$byModelSubstitution = str_replace("\${ByModel}", $this->classWithoutNamespace, $OneModelsSubstitution);
-			$lcFirstManuyModelsSubstitution = str_replace("\${lcFirstOneModelsPlural}", $this->inflector->pluralize(lcfirst($relationShipModel)), $byModelSubstitution);
+			$lcFirstManuyModelsSubstitution = str_replace("\${lcFirstOneModel}", lcfirst($relationShipModel), $byModelSubstitution);
 
 			$relationshipsSubstitution = $lcFirstManuyModelsSubstitution;
 
