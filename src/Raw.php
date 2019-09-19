@@ -21,6 +21,7 @@ use LoRDFM\Raw\Annotations\RawableContract;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use LoRDFM\Raw\Templates\TestStub;
 use Symfony\Component\ClassLoader\ClassLoader;
 
 class Raw
@@ -180,6 +181,11 @@ class Raw
                 $hasRepositoryDefinition = false;
                 $hasControllerDefinition = false;
 
+                $controllers = [];
+                $contracts = [];
+                $repositories = [];
+                
+
                 foreach ($classAnnotations as $annot) {
                     
                     if ($annot instanceof HasOne) {
@@ -212,6 +218,8 @@ class Raw
                             $contractNamespace = "App\Repositories\Contracts";
                         }
 
+                        array_push($contracts, [$contractPath, $contractNamespace]);
+
                     }
 
                     if ($annot instanceof RawableRepository) {
@@ -220,6 +228,7 @@ class Raw
 
                         $repositoryPath = $annot->getPath();
                         $repositoryNamespace = $annot->getNamespace();
+                        $contractNamespace = $annot->getContract();
 
                         if(!isset($repositoryPath)){
                             $this->createRepositoriesDirs();
@@ -229,6 +238,12 @@ class Raw
                         if(!isset($repositoryNamespace)){
                             $repositoryNamespace = "App\Repositories";
                         }
+
+                        if(!isset($contractNamespace)){
+                            $contractNamespace= "App\Repositories\Contracts";
+                        }
+
+                        array_push($repositories, [$repositoryPath, $repositoryNamespace, $contractNamespace]);
                         
                     }
 
@@ -238,6 +253,7 @@ class Raw
 
                         $controllerPath = $annot->getPath();
                         $controllerNamespace = $annot->getNamespace();
+                        $contractNamespace = $annot->getContract();
 
                         if(!isset($controllerPath)){
                             $this->createRepositoriesDirs();
@@ -247,24 +263,33 @@ class Raw
                         if(!isset($controllerNamespace)){
                             $controllerNamespace = "App\Http\Controllers";
                         }
+
+                        if(!isset($contractNamespace)){
+                            $contractNamespace= "App\Repositories\Contracts";
+                        }
+
+                        array_push($controllers, [$controllerPath, $controllerNamespace, $contractNamespace]);
                     }
 
                 }
                 
-                if(!$hasContractDefinition && !$hasRepositoryDefinition){
+                if(!$hasContractDefinition || !$hasRepositoryDefinition){
                     $this->createRepositoriesDirs();
-                    $repositoriesPath = config('raw')['repositories_default_path'];
-                    $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
-                    $contractPath = $repositoriesPath.DIRECTORY_SEPARATOR.'Contracts';
                 }
 
                 if(!$hasContractDefinition){
+                    $repositoriesPath = config('raw')['repositories_default_path'];
+                    $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
+                    $contractPath = $repositoriesPath.DIRECTORY_SEPARATOR.'Contracts';
                     $contractNamespace = "App\Repositories\Contracts";
                 }
 
                 if(!$hasRepositoryDefinition){
+
+                    $repositoriesPath = config('raw')['repositories_default_path'];
+                    $repositoriesPath = str_replace("\\", DIRECTORY_SEPARATOR , $repositoriesPath);
+                    $contractPath = $repositoriesPath.DIRECTORY_SEPARATOR.'Contracts';
                     $repositoryNamespace = "App\Repositories";
-                    $repositoryPath = config('raw')['repositories_default_path'];
                 }
 
                 if(!$hasControllerDefinition){
@@ -272,11 +297,43 @@ class Raw
                     $controllerPath = config('raw')['controllers_default_path'];
                 }
 
-                $this->createContract($model, $hasOne, $hasMany, $belongsTo, $contractPath, $contractNamespace);
-                $this->createRepository($model, $hasOne, $hasMany, $belongsTo, $repositoryPath, $repositoryNamespace, $contractNamespace);
-                $this->createController($model, $hasOne, $hasMany, $belongsTo, $controllerPath, $controllerNamespace, $contractNamespace);
 
-                $routeGroup = $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
+                if(sizeof($contracts) > 0){
+                    foreach ($contracts as $contract) {
+                        $this->createContract($model, $hasOne, $hasMany, $belongsTo, $contract[0], $contract[1]);
+                    }
+                } else {
+                    $this->createContract($model, $hasOne, $hasMany, $belongsTo, $contractPath, $contractNamespace);
+                }
+                
+                if(sizeof($contracts) > 0){
+                    foreach ($repositories as $repository) {
+                        $this->createRepository($model, $hasOne, $hasMany, $belongsTo, $repository[0], $repository[1], $repository[2]);
+
+                        if($this->options['test']=="true"){
+                            
+                            $this->createTest($model, $hasOne, $hasMany, $belongsTo, $repository[1]);
+                        }
+                    }
+                } else {
+                    $this->createRepository($model, $hasOne, $hasMany, $belongsTo, $repositoryPath, $repositoryNamespace, $contractNamespace);
+
+                    if($this->options['test']=="true"){
+
+                        $this->createTest($model, $hasOne, $hasMany, $belongsTo, $repositoryNamespace);
+                            
+                    }
+                }
+            
+                if(sizeof($contracts) > 0){
+                    foreach ($controllers as $controller) {
+                        $this->createController($model, $hasOne, $hasMany, $belongsTo, $controller[0], $controller[1], $controller[2]);
+                    }
+                } else {
+                    $this->createController($model, $hasOne, $hasMany, $belongsTo, $controllerPath, $controllerNamespace, $contractNamespace);
+                }
+
+                // $routeGroup = $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
 
             }
         }
@@ -340,11 +397,11 @@ class Raw
      * @param Array<Class> $hasMany
      * @param Array<Class> $belongsTo 
      * @param String $path 
-     * @param String $controllerNamespace
+     * @param String $repositoryNamespace
      * @param String $contractNamespace
      * @return void 
      */
-    public function createRepository($model,$hasOne, $hasMany, $belongsTo, $path = null, $controllerNamespace = null, $contractNamespace = null)
+    public function createRepository($model,$hasOne, $hasMany, $belongsTo, $path = null, $repositoryNamespace = null, $contractNamespace = null)
     {    
 
         $modelInstance = new $model();
@@ -362,9 +419,9 @@ class Raw
             mkdir($destinationPath.DIRECTORY_SEPARATOR, 0777, true);
         }
 
-        $productionFileName = $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Repository.php";
+        $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."Repository.php";
 
-        $repositoryTemplate = new RepositoryStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $controllerNamespace, $contractNamespace);
+        $repositoryTemplate = new RepositoryStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $repositoryNamespace, $contractNamespace);
         $output =  $repositoryTemplate->getTemplate();
 
         if(file_exists($productionFileName)){
@@ -481,6 +538,59 @@ class Raw
             fclose($productionFileHandler);
         }
 
+    }
+
+
+        /**
+     * Creates the repository for the Rawable Model
+     *
+     * @param Class $model 
+     * @param Array<Class> $hasOne
+     * @param Array<Class> $hasMany
+     * @param Array<Class> $belongsTo
+     * @param String $repositoryNamespace
+     * @return void 
+     */
+    public function createTest($model,$hasOne, $hasMany, $belongsTo, $repositoryNamespace = null )
+    {    
+
+        $modelInstance = new $model();
+
+        $classWithoutNamespace = substr(strrchr(get_class($modelInstance), "\\" ), 1);
+
+        $testNamespace = 'Tests\Repository';
+        $testPath = 'tests/Repository';
+        if(version_compare( app()->version(), '5.4.0', '>=')){
+            $testNamespace = 'Tests\Unit\Repository';
+            $testPath = 'tests/Unit/Repository';
+        }
+
+        $destinationPath = str_replace("\\", DIRECTORY_SEPARATOR , $testPath);
+
+        if (!file_exists($destinationPath.DIRECTORY_SEPARATOR)) {
+            mkdir($destinationPath.DIRECTORY_SEPARATOR, 0777, true);
+        }
+
+        $productionFileName = $destinationPath.DIRECTORY_SEPARATOR.$classWithoutNamespace."RepositoryTest.php";
+
+
+
+        $testTemplate = new TestStub($classWithoutNamespace, $hasOne, $hasMany, $belongsTo, $testNamespace, $repositoryNamespace);
+        $output =  $testTemplate->getTemplate();
+
+        if(file_exists($productionFileName)){
+            if($this->options['force']=="true"){
+                $productionFileHandler = fopen($productionFileName, 'w');
+                fwrite($productionFileHandler, $output);
+                fclose($productionFileHandler);
+            } else {
+                echo "This Test already exists. If you want to overwrite it use '--force'".PHP_EOL;
+            }
+        } else {
+            $productionFileHandler = fopen($productionFileName, 'w');
+            fwrite($productionFileHandler, $output);
+            fclose($productionFileHandler);
+        }
     }
 
     /**

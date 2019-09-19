@@ -1,0 +1,34 @@
+
+	public function testGetAll${ManyModels}By${ByModel}(){
+
+		$id = null;
+
+		$response = $this->repository->getAll${ManyModels}By${ByModel}($this->auth, $id);
+
+		$this->assertTrue(true);
+
+	}
+
+	public function testGetPaginated${ManyModels}By${ByModel}(){
+
+		$id = null;
+		$limit = null;
+		$page = null;
+		$search = null;
+
+		$response = $this->repository->getPaginated${ManyModels}By${ByModel}($this->auth, $id, $limit, $page, $search);
+
+		$this->assertTrue(true);
+
+	}
+
+	public function testGetCount${ManyModels}By${ByModel}(){
+
+		$id = null;
+		$search = null;
+
+		$response = $this->repository->getCount${ManyModels}By${ByModel}($this->auth, $id, $search);
+
+		$this->assertTrue(true);
+
+	}

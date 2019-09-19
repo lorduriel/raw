@@ -56,7 +56,7 @@ Now, just run
 
 What happened?. We just built our typical `--resource Controller` along with a `Contract` interface to declare all crud related methods and a `Repository` class to implement them.
 
-Dont forget to bind your repositories in your `Providers\AppServiceProvider.php`
+Don't forget to bind your repositories in your `Providers\AppServiceProvider.php`
 
 ```
     /**
@@ -111,25 +111,27 @@ An array of models with related as `Many to One` from the current model
 @BelongsTo(models = {"Author", "Publisher", ...})
 ```
 
-### @RawableController
-Handles the creation of the controllers.
-Support `path` and a `namespace` to store and declare the `--resource` style controller for your model.
-```
-* @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers\Api")
-```
-
 ### @RawableContract
-Handles the cration of the `interface` class (aka 'contract') with the methods your repository should implement
-Support `path` and a `namespace` to store and declare the interface
+Handles the cration of the `interface` class (aka 'contract') with the methods your repository and controller should implement.
+This is the core of the customization of the repository
+`@RawableController` and `@RawableRepository` requires the `namespace` of this annotation as argument
+Supports `path` and a `namespace` to store and declare the interface
 ```
 @RawableContract(path = "app\Repository\Contracts", namespace = "App\Repository\Contracts")
 ```
 
+### @RawableController
+Handles the creation of the controllers.
+Supports `path`, `namespace` and `contract` to store and declare the `--resource` style controller for your model.
+```
+* @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers\Api", contract = "App\Repository\Contracts")
+```
+
 ### @RawableRepository
 Handles the repository class creation.
-Support `path` and a `namespace` to store and delcare the class
+Supports `path`, `namespace` and `contract` to store and delcare the class
 ```
-@RawableRepository(path = "app\Repository", namespace = "App\Repository")
+@RawableRepository(path = "app\Repository", namespace = "App\Repository", contract = "App\Repository\Contracts")
 ```
 
 ## Now What?
@@ -144,9 +146,6 @@ Classic **Author** -> **Articles** example:
     use Illuminate\Database\Eloquent\Model;
     
     use LoRDFM\Raw\Annotations\Rawable;
-    use LoRDFM\Raw\Annotations\RawableController;
-    use LoRDFM\Raw\Annotations\RawableContract;
-    use LoRDFM\Raw\Annotations\RawableRepository;
     use LoRDFM\Raw\Annotations\HasMany;
     use LoRDFM\Raw\Annotations\HasOne;
     
@@ -155,9 +154,6 @@ Classic **Author** -> **Articles** example:
     * @Rawable
     * @HasMany(models = {"Article"})
     * @HasOne(models = {"Profile"})
-    * @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers\Api")
-    * @RawableContract(path = "app\Repository\Contracts", namespace = "App\Repository\Contracts")
-    * @RawableRepository(path = "app\Repository", namespace = "App\Repository")
     */
     class  Author  extends  Model
     {
@@ -184,18 +180,12 @@ to the  Article model
     use Illuminate\Database\Eloquent\Model;
    
     use LoRDFM\Raw\Annotations\Rawable;
-    use LoRDFM\Raw\Annotations\RawableController;
-    use LoRDFM\Raw\Annotations\RawableContract;
-    use LoRDFM\Raw\Annotations\RawableRepository;
     use LoRDFM\Raw\Annotations\BelongsTo;
     
     /**
     *
     * @Rawable
     * @BelongsTo(models = {"Author"})
-    * @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers\Api")
-    * @RawableContract(path = "app\Repository\Contracts", namespace = "App\Repository\Contracts")
-    * @RawableRepository(path = "app\Repository", namespace = "App\Repository")
     */
     class  Article  extends  Model
     {
@@ -223,6 +213,7 @@ The Article holds `Many to One` to their author
     }
 
 The  Profile model has no @Rawable implementation at all, not required for the moment.
+
 
 ## Let's go!
 
@@ -252,3 +243,103 @@ You may choose to run the command for just some models
     php artisan raw:repository Author
     php artisan raw:repository Author Article
     php artisan raw:repository Author Article Publisher ...
+
+
+## Custom Structure
+
+You can customize the contract, controller and repository for your model
+Just import the annotations and define them with your desired path and namespace 
+Remember that `RawableController` and `RawableRepository` requires the namespace of their corresponding contract
+
+    <?php
+    namespace  App\Models;
+    
+    use Illuminate\Database\Eloquent\Model;
+    
+    use LoRDFM\Raw\Annotations\Rawable;
+    use LoRDFM\Raw\Annotations\RawableController;
+    use LoRDFM\Raw\Annotations\RawableContract;
+    use LoRDFM\Raw\Annotations\RawableRepository;
+    use LoRDFM\Raw\Annotations\HasMany;
+    use LoRDFM\Raw\Annotations\HasOne;
+    
+    /**
+    *
+    * @Rawable
+    * @HasMany(models = {"Article"})
+    * @HasOne(models = {"Profile"})
+    *
+    * @RawableContract(path = "app\Repository\Contracts", namespace = "App\Repository\Contracts")
+    * @RawableController(path = "app\Http\Controllers", namespace = "App\Http\Controllers", contract = "App\Repository\Contracts")
+    * @RawableRepository(path = "app\Repository", namespace = "App\Repository", contract = "App\Repository\Contracts")
+    */
+    class  Author  extends  Model
+    {
+    
+	    public  function  articles()
+	    {
+		    return  $this->hasMany('App\Models\Article');
+	    }
+    
+	    public  function  profile()
+	    {
+		    return  $this->hasOne('App\Models\Profile');
+	    }
+	    
+    }
+
+## Multiple Endpoints
+
+You might want multiple endpoints with similar implementation, like a `Guest` and `Api` implementation
+for unauthenticated and authenticated users.
+Just define multiple groups of `RawableContract`, `RawableController` and `RawableRepository`
+Here is an example...
+
+
+    <?php
+
+    namespace  App\Models;
+    
+    use Illuminate\Database\Eloquent\Model;
+   
+    use LoRDFM\Raw\Annotations\Rawable;
+    use LoRDFM\Raw\Annotations\RawableController;
+    use LoRDFM\Raw\Annotations\RawableContract;
+    use LoRDFM\Raw\Annotations\RawableRepository;
+    use LoRDFM\Raw\Annotations\BelongsTo;
+    
+    /**
+    *
+    * @Rawable
+    * @BelongsTo(models = {"Author"})
+    *
+    * @RawableContract(path = "app\Repository\Api\Contracts", namespace = "App\Repository\Api\Contracts")
+    * @RawableController(path = "app\Http\Controllers\Api", namespace = "App\Http\Controllers",  contract = "App\Repository\Api\Contracts")
+    * @RawableRepository(path = "app\Repository\Api", namespace = "App\Repository\Api", contract = "App\Repository\Api\Contracts")
+    *
+    * @RawableContract(path = "app\Repository\Guest\Contracts", namespace = "App\Repository\Guest\Contracts")
+    * @RawableController(path = "app\Http\Controllers\Guest", namespace = "App\Http\Controllers",  contract = "App\Repository\Guest\Contracts")
+    * @RawableRepository(path = "app\Repository\Guest", namespace = "App\Repository\Guest", contract = "App\Repository\Guest\Contracts")
+    *
+    */
+    class  Article  extends  Model
+    {
+	    public  function  author()
+	    {
+	    return  $this->belongsTo('App\Models\Author');
+	    }
+    }
+
+
+## Test boilerplate
+
+You can generate some Unit test boilerplate for you repository
+
+     php artisan raw:repository --test
+
+
+## Gotchas
+- Write the comment with no space before the class declaration.
+- in `@RawableController` and `@RawableController` the `contract` argument is the `namespace` of the corresponding contract,
+  not the final inflected class name
+- Do not forget to bind your repositories in your `Providers\AppServiceProvider.php`

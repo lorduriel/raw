@@ -1,0 +1,101 @@
+<?php
+
+namespace ${TestNamespace};
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+use ${RepositoryNamespace}\RawableModelClassRepository;
+use ModelNamespace\RawableModelClass;
+
+class RawableModelClassRepositoryTest extends TestCase
+{
+
+    protected $repository;
+    protected $auth1;
+
+    protected function setUp()
+	{
+	  	parent::setUp();
+
+        $this->repository = new RawableModelClassRepository(new RawableModelClass());
+
+        /**
+        *
+        * TODO
+        * @todo
+        * Auth implementation
+        */
+
+        $this->auth = null;
+        
+    }
+
+    public function testGetAllRawableModelClassPlural(){
+
+        $response = $this->repository->getAllRawableModelClassPlural($this->auth);
+
+        $this->assertTrue(true);
+
+    }
+
+	public function testGetPaginatedRawableModelClassPlural(){
+
+        $limit = null;
+        $page = null;
+        $search = null;
+
+        $response = $this->repository->getPaginatedRawableModelClassPlural($this->auth, $limit, $page, $search);
+
+        $this->assertTrue(true);
+
+    }
+
+	public function testGetCountRawableModelClassPlural(){
+
+        $search = null;
+        $response = $this->repository->getCountRawableModelClassPlural($this->auth, $search);
+
+        $this->assertTrue(true);
+
+    }
+	
+	public function testCreateRawableModelClass(){
+
+        $model = null;
+        $response = $this->repository->createRawableModelClass($this->auth, $model);
+    
+        $this->assertTrue(true);
+
+    }
+
+    public function testReadRawableModelClass(){
+
+        $id = null;
+        $response = $this->repository->readRawableModelClass($this->auth, $id);
+
+        $this->assertTrue(true);
+
+    }
+
+	public function testUpdateRawableModelClass(){
+
+        $model = null;
+        $response = $this->repository->updateRawableModelClass($this->auth, $model);
+
+        $this->assertTrue(true);
+
+    }
+
+	public function testDeleteRawableModelClass(){
+
+        $model = null;
+        $response = $this->repository->deleteRawableModelClass($this->auth, $model);
+
+        $this->assertTrue(true);
+
+    }
+
+	${hasOneRelationshipsTest}${belongsToRelationshipsTest}${hasManyRelationshipsTest}
+}

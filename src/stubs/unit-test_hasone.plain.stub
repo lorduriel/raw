@@ -1,0 +1,10 @@
+    public function testGet${OneModels}By${ByModel}()
+    {   
+
+        $id = null;
+
+        $response = $this->repository->getCount${OneModels}By${ByModel}($this->auth, $id);
+
+        $this->assertTrue(true);
+
+    }

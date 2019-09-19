@@ -6,7 +6,8 @@ namespace LoRDFM\Raw\Annotations;
  * @Target({"CLASS"})
  * @Attributes({
  *   @Attribute("namespace", type = "string"),
- *   @Attribute("path", type = "string")
+ *   @Attribute("path", type = "string"),
+ *   @Attribute("contract", type = "string")
  * })
  */
 final class RawableRepository
@@ -14,7 +15,11 @@ final class RawableRepository
     /** @Required */
     private $namespace;
 
+    /** @Required */
     private $path;
+
+    /** @Required */
+    private $contract;
 
     public function __construct(array $values)
     {
@@ -24,6 +29,10 @@ final class RawableRepository
 
         if(array_key_exists("path", $values)){
             $this->path = $values['path'];
+        }
+
+        if(array_key_exists("contract", $values)){
+            $this->contract = $values['contract'];
         }
     }
 
@@ -35,5 +44,10 @@ final class RawableRepository
     public function getPath()
     {
     	return $this->path;
+    }
+
+    public function getContract()
+    {
+    	return $this->contract;
     }
 }
