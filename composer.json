@@ -31,5 +31,12 @@
     "require-dev": {
         "phpunit/phpunit": "^5.7",
         "orchestra/testbench": "^3.4"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LoRDFM\\Raw\\RawServiceProvider"
+            ]
+        }
     }
 }
