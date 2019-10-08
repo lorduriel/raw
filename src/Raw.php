@@ -328,12 +328,12 @@ class Raw
                 if(sizeof($contracts) > 0){
                     foreach ($controllers as $controller) {
                         $this->createController($model, $hasOne, $hasMany, $belongsTo, $controller[0], $controller[1], $controller[2]);
+                        $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controller[1]);
                     }
                 } else {
                     $this->createController($model, $hasOne, $hasMany, $belongsTo, $controllerPath, $controllerNamespace, $contractNamespace);
+                    $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
                 }
-
-                // $routeGroup = $this->createRouteGroups($model, $hasOne, $hasMany, $belongsTo, $controllerNamespace);
 
             }
         }
